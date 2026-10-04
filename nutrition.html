@@ -1,0 +1,1098 @@
+<title>Nutrition Chapter 45</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400;0,600;0,700;1,400&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one reading column; each concept is a "room", ordered food → body → choices → assessment → problems → diets */
+:root {
+  --ground: #F2F1EC;
+  --surface: #E9E8E2;
+  --text: #2D2A25;
+  --text-muted: #6F6A63;
+  --border: #D6D4CE;
+
+  --basics: #4A6FA5;   --basics-bg: #EDF1F8;
+  --macro: #A07F1E;    --macro-bg: #F6F2E5;
+  --micro: #3B7969;    --micro-bg: #E8F2EF;
+  --body: #8B6C4E;     --body-bg: #F3EEE8;
+  --choose: #6B7A4A;   --choose-bg: #F0F2E8;
+  --factors: #6B5B8A;  --factors-bg: #F0ECF5;
+  --assess: #5E7A8C;   --assess-bg: #ECF0F3;
+  --altered: #9A4A4A;  --altered-bg: #F5ECEC;
+  --swallow: #A0566E;  --swallow-bg: #F6EDF1;
+  --diets: #3D6E86;    --diets-bg: #E7F0F4;
+  --review: #4F4A44;   --review-bg: #E9E8E2;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground: #1C1F2A;
+    --surface: #262A38;
+    --text: #D3CFC6;
+    --text-muted: #908B84;
+    --border: #3A3E4E;
+
+    --basics: #7B9AD0;   --basics-bg: #232840;
+    --macro: #D4B44A;    --macro-bg: #2A2718;
+    --micro: #64A894;    --micro-bg: #1E2C28;
+    --body: #B99070;     --body-bg: #2A2520;
+    --choose: #9AAA6A;   --choose-bg: #242818;
+    --factors: #9A8ABF;  --factors-bg: #28223A;
+    --assess: #8AAABF;   --assess-bg: #1E2830;
+    --altered: #C87070;  --altered-bg: #2E2224;
+    --swallow: #C88AA0;  --swallow-bg: #2E2229;
+    --diets: #7AB0C8;    --diets-bg: #1D2A31;
+    --review: #B8B3AA;   --review-bg: #262A38;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #1C1F2A;
+  --surface: #262A38;
+  --text: #D3CFC6;
+  --text-muted: #908B84;
+  --border: #3A3E4E;
+
+  --basics: #7B9AD0;   --basics-bg: #232840;
+  --macro: #D4B44A;    --macro-bg: #2A2718;
+  --micro: #64A894;    --micro-bg: #1E2C28;
+  --body: #B99070;     --body-bg: #2A2520;
+  --choose: #9AAA6A;   --choose-bg: #242818;
+  --factors: #9A8ABF;  --factors-bg: #28223A;
+  --assess: #8AAABF;   --assess-bg: #1E2830;
+  --altered: #C87070;  --altered-bg: #2E2224;
+  --swallow: #C88AA0;  --swallow-bg: #2E2229;
+  --diets: #7AB0C8;    --diets-bg: #1D2A31;
+  --review: #B8B3AA;   --review-bg: #262A38;
+}
+
+body {
+  background: var(--ground);
+  color: var(--text);
+  font-family: 'Figtree', 'Segoe UI', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  padding-inline: 24px;
+  padding-block: 40px 80px;
+}
+@media (max-width: 500px) { body { padding-inline: 16px; } }
+.doc { max-width: 760px; margin: 0 auto; }
+
+h1 {
+  font-family: 'Vollkorn', 'Georgia', serif;
+  font-weight: 700;
+  font-size: 2rem;
+  line-height: 1.2;
+  text-wrap: balance;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+h2 {
+  font-family: 'Vollkorn', 'Georgia', serif;
+  font-weight: 600;
+  font-size: 1.35rem;
+  line-height: 1.3;
+  text-wrap: balance;
+  margin: 0 0 16px;
+}
+h4 {
+  font-family: 'Vollkorn', 'Georgia', serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin: 0 0 6px;
+}
+.subtitle { color: var(--text-muted); margin: 6px 0 0; font-size: 0.95rem; }
+
+/* ── Map ── */
+.map { display: flex; flex-wrap: wrap; gap: 8px; margin: 36px 0 48px; }
+.map-item {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 0.78rem; font-weight: 500;
+  color: var(--text-muted);
+  padding: 5px 10px; border-radius: 6px;
+  background: var(--surface);
+  white-space: nowrap; text-decoration: none;
+}
+.map-item:hover, .map-item:focus-visible { color: var(--text); }
+.map-item:focus-visible { outline: 2px solid var(--text-muted); outline-offset: 2px; }
+.map-item .step { font-variant-numeric: tabular-nums; font-weight: 600; }
+.map-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── Sections ── */
+.concept {
+  margin-bottom: 48px;
+  border-left: 4px solid var(--c);
+  padding-left: 24px;
+  scroll-margin-top: 16px;
+}
+@media (max-width: 500px) { .concept { padding-left: 14px; } }
+.concept-header {
+  background: var(--c-bg);
+  padding: 14px 18px 14px 42px;
+  border-radius: 6px;
+  margin: 0 0 20px -24px;
+}
+@media (max-width: 500px) { .concept-header { margin-left: -14px; padding-left: 28px; } }
+.concept-header h2 { margin-bottom: 0; }
+.concept-header .section-label {
+  font-size: 0.72rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 4px; display: block;
+  color: var(--c);
+}
+.concept-header .slides { font-size: 0.78rem; color: var(--text-muted); margin: 4px 0 0; }
+
+.s-basics  { --c: var(--basics);  --c-bg: var(--basics-bg); }
+.s-macro   { --c: var(--macro);   --c-bg: var(--macro-bg); }
+.s-micro   { --c: var(--micro);   --c-bg: var(--micro-bg); }
+.s-body    { --c: var(--body);    --c-bg: var(--body-bg); }
+.s-choose  { --c: var(--choose);  --c-bg: var(--choose-bg); }
+.s-factors { --c: var(--factors); --c-bg: var(--factors-bg); }
+.s-assess  { --c: var(--assess);  --c-bg: var(--assess-bg); }
+.s-altered { --c: var(--altered); --c-bg: var(--altered-bg); }
+.s-swallow { --c: var(--swallow); --c-bg: var(--swallow-bg); }
+.s-diets   { --c: var(--diets);   --c-bg: var(--diets-bg); }
+.s-review  { --c: var(--review);  --c-bg: var(--review-bg); }
+
+/* ── Content ── */
+p { margin: 0 0 12px; }
+ul, ol { margin: 0 0 12px; padding-left: 20px; }
+li { margin-bottom: 4px; }
+li::marker { color: var(--text-muted); }
+strong { font-weight: 600; }
+
+.principles { background: var(--surface); border-radius: 6px; padding: 16px 18px; margin-bottom: 20px; }
+.principles p { margin: 0; }
+.principles p + p { margin-top: 8px; }
+
+.sub-label {
+  font-weight: 600; font-size: 0.82rem;
+  color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin: 18px 0 6px;
+}
+
+.callout { background: var(--surface); border-radius: 6px; padding: 12px 16px; margin: 14px 0; font-size: 0.93rem; }
+.callout strong:first-child { display: block; margin-bottom: 4px; }
+.callout.alert { background: var(--altered-bg); }
+.callout.alert strong:first-child { color: var(--altered); }
+
+/* Nursing problem chip: the slide-34 list, placed in the room it belongs to */
+.problem {
+  display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin: 14px 0;
+  font-size: 0.92rem;
+}
+.problem .p-label {
+  font-size: 0.7rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--c);
+}
+.problem .p-name { font-weight: 600; }
+
+.note { font-size: 0.88rem; color: var(--text-muted); margin-top: 8px; }
+
+hr.section-divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+/* ── Picture slot for the memory palace ── */
+.picture {
+  border: 1.5px dashed var(--c);
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin: 0 0 20px;
+  font-size: 0.9rem;
+}
+.picture .pic-label {
+  display: block;
+  font-size: 0.72rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--c);
+  margin-bottom: 2px;
+}
+.picture .pic-text { min-height: 1.6em; }
+.picture .pic-text:empty::before {
+  content: "Click here to write the picture you'll place in this room.";
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ── Grids ── */
+.compare, .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; margin: 16px 0; }
+@media (max-width: 600px) { .compare, .card-grid { grid-template-columns: 1fr; } }
+.compare > *, .card-grid > * { min-width: 0; }
+.compare-block { border-top: 3px solid var(--c); padding-top: 12px; }
+.compare-block ul { margin-bottom: 0; }
+
+.card { border: 1px solid var(--border); border-top: 3px solid var(--c); border-radius: 6px; padding: 12px 14px; }
+.card h4 {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.8rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--c);
+  margin-bottom: 6px;
+}
+.card ul { font-size: 0.92rem; margin: 0; }
+.card p { font-size: 0.92rem; margin: 0 0 6px; }
+.card .kcal { font-variant-numeric: tabular-nums; font-weight: 600; }
+
+/* ── Numbered sequences (real order only) ── */
+.numbered-list { display: flex; flex-direction: column; gap: 12px; margin: 16px 0; }
+.numbered-item { display: grid; grid-template-columns: 32px 1fr; gap: 10px; align-items: start; }
+.numbered-item .num {
+  font-family: 'Vollkorn', serif; font-weight: 700; font-size: 1.1rem;
+  color: var(--c); text-align: center; font-variant-numeric: tabular-nums;
+}
+.numbered-item .num-content { font-size: 0.93rem; min-width: 0; }
+.numbered-item .num-content strong { display: block; margin-bottom: 2px; }
+
+/* ── Tables ── */
+.table-wrap { overflow-x: auto; margin: 16px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--border); }
+thead th {
+  font-size: 0.78rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--c);
+  border-bottom: 2px solid var(--c);
+}
+tbody th { font-weight: 600; white-space: nowrap; color: var(--text); }
+td.num, th.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ── Editable ── */
+[contenteditable] { outline: none; }
+[contenteditable]:focus-within { background: color-mix(in srgb, var(--text) 3%, transparent); border-radius: 3px; }
+.save-status {
+  position: fixed;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  right: 16px;
+  font-size: 0.78rem; font-weight: 500;
+  padding: 6px 12px; border-radius: 6px;
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  opacity: 0; transition: opacity 0.3s;
+  pointer-events: none; z-index: 100;
+}
+.save-status.visible { opacity: 1; }
+.save-status.saving { color: var(--text); }
+@media (prefers-reduced-motion: reduce) { .save-status { transition: none; } }
+</style>
+
+<div class="doc">
+  <header>
+    <h1>Nutrition</h1>
+    <p class="subtitle">Chapter 45 Fundamentals: reorganized by concept, each topic in one place, from food on the plate to the diet order</p>
+  </header>
+
+  <nav class="map" aria-label="Rooms">
+    <a class="map-item" href="#basics"><span class="map-dot" style="background:var(--basics)"></span><span class="step">1</span> Definitions</a>
+    <a class="map-item" href="#macro"><span class="map-dot" style="background:var(--macro)"></span><span class="step">2</span> Macronutrients</a>
+    <a class="map-item" href="#micro"><span class="map-dot" style="background:var(--micro)"></span><span class="step">3</span> Micronutrients</a>
+    <a class="map-item" href="#body"><span class="map-dot" style="background:var(--body)"></span><span class="step">4</span> Digestion & Metabolism</a>
+    <a class="map-item" href="#choose"><span class="map-dot" style="background:var(--choose)"></span><span class="step">5</span> Guidelines & Labels</a>
+    <a class="map-item" href="#factors"><span class="map-dot" style="background:var(--factors)"></span><span class="step">6</span> Lifespan & Culture</a>
+    <a class="map-item" href="#assess"><span class="map-dot" style="background:var(--assess)"></span><span class="step">7</span> Assessment</a>
+    <a class="map-item" href="#altered"><span class="map-dot" style="background:var(--altered)"></span><span class="step">8</span> Altered Nutrition</a>
+    <a class="map-item" href="#swallow"><span class="map-dot" style="background:var(--swallow)"></span><span class="step">9</span> Swallowing & Feeding</a>
+    <a class="map-item" href="#diets"><span class="map-dot" style="background:var(--diets)"></span><span class="step">10</span> Diets</a>
+    <a class="map-item" href="#review"><span class="map-dot" style="background:var(--review)"></span>Takeaways</a>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 1. DEFINITIONS                              -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-basics" id="basics" data-key="basics">
+    <div class="concept-header">
+      <span class="section-label">Room 1 · Foundation</span>
+      <h2>Nutrition, Nutrients & Energy Balance</h2>
+      <p class="slides">From slides 3–4</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="principles">
+      <p><strong>Nutrition</strong> is the body's intake and use of adequate amounts of necessary nutrients for tissue growth and energy production.</p>
+      <p><strong>Nutrients</strong> are the substances in food that supply energy; build and maintain bones, muscles, and skin; and support normal growth and function of every body system.</p>
+    </div>
+
+    <p class="sub-label">Energy balance: intake vs. what the body needs</p>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Too little for the body's needs</h4>
+        <ul>
+          <li><strong>Malnutrition:</strong> an imbalance between nutrient intake and the body's needs</li>
+          <li>Details in Room 8</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Too much for the body's use</h4>
+        <ul>
+          <li><strong>Obesity:</strong> energy intake consistently exceeds energy use</li>
+          <li>Details in Room 8</li>
+        </ul>
+      </div>
+    </div>
+
+    <p><strong>Food security</strong> means access to sufficient, safe, and nutritious food. Without it, balance is hard to reach no matter what the patient knows.</p>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 2. MACRONUTRIENTS                           -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-macro" id="macro" data-key="macro">
+    <div class="concept-header">
+      <span class="section-label">Room 2 · What's in the Food: Large Amounts</span>
+      <h2>Macronutrients: Carbs, Protein, Fat, Water</h2>
+      <p class="slides">From slides 6–12</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="principles">
+      <p><strong>Macronutrients are needed in large amounts.</strong> Carbohydrates, proteins, and fats supply energy, measured in kilocalories (1 kcal = 1,000 calories; "calories" on a label means kcal). Water supplies none but is 60–70% of body weight.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Nutrient</th><th class="num">kcal per gram</th><th>Main job</th></tr></thead>
+        <tbody>
+          <tr><th>Carbohydrate</th><td class="num">4</td><td>Main source of energy</td></tr>
+          <tr><th>Protein</th><td class="num">4</td><td>Build, maintain, repair tissue</td></tr>
+          <tr><th>Fat</th><td class="num">9</td><td>Most calorie-dense; energy storage</td></tr>
+          <tr><th>Water</th><td class="num">0</td><td>Temperature, transport, fluid balance</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr class="section-divider">
+
+    <h4>Carbohydrates</h4>
+    <p>Sugars, starches, and fiber. They turn into glucose, the fuel for the brain, for skeletal muscle during exercise, and for blood cell production.</p>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Simple carbs</h4>
+        <ul>
+          <li>Broken down and absorbed <strong>quickly</strong></li>
+          <li>Fast energy that burns off fast</li>
+          <li>Glucose, fructose, sucrose, lactose, maltose (sugars)</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Complex carbs</h4>
+        <ul>
+          <li>Starches, glycogen, and fiber</li>
+          <li>Take <strong>longer</strong> to break down before use</li>
+          <li>Energy lasts longer</li>
+        </ul>
+      </div>
+    </div>
+    <p class="sub-label">Fiber (a complex carb)</p>
+    <ul>
+      <li>Soluble or insoluble, depending on how it behaves when mixed with water</li>
+      <li>Older children, adolescents, and adults: <strong>20–35 g per day</strong></li>
+      <li>Sources: whole grains, wheat bran, cereals, fresh fruits, vegetables, legumes</li>
+    </ul>
+
+    <hr class="section-divider">
+
+    <h4>Protein</h4>
+    <ul>
+      <li>Develops, maintains, and repairs tissues, organs, and cells</li>
+      <li>Made of <strong>amino acids</strong>, the "building blocks." There are 9 essential amino acids.</li>
+      <li>Amino acids are <strong>not stored</strong>. They must be eaten <strong>every day</strong>.</li>
+      <li>If carbs or fat are deficient, the body burns protein for energy instead</li>
+    </ul>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Complete protein</h4>
+        <ul>
+          <li>Contains <strong>all</strong> essential amino acids</li>
+          <li>Animal foods: eggs, cheese, fish, poultry, red meat</li>
+          <li>Plus <strong>soybeans</strong>, the plant exception</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Incomplete protein</h4>
+        <ul>
+          <li>Missing one or more essential amino acids</li>
+          <li>Vegetables, legumes, seeds, nuts, grains</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note">The lab value for protein status (albumin) is in Room 7.</p>
+
+    <hr class="section-divider">
+
+    <h4>Fats (lipids)</h4>
+    <p class="sub-label">Fats are essential for</p>
+    <ul>
+      <li>Energy production and storage in adipose tissue</li>
+      <li>Support and insulation of major organs and nerve fibers</li>
+      <li>Lubrication of body tissues</li>
+      <li><strong>Absorbing and transporting vitamins A, D, E, and K</strong> (Room 3)</li>
+      <li>Building cell membranes</li>
+    </ul>
+    <ul>
+      <li><strong>Lipid:</strong> any fat in the body, including fatty acids, cholesterol, and phospholipids</li>
+      <li><strong>Triglycerides:</strong> the most abundant lipids in food</li>
+      <li><strong>Cholesterol:</strong> a waxy, fat-like substance found in every cell</li>
+    </ul>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Unsaturated ("good")</h4>
+        <ul>
+          <li>Olive oil, avocado, almonds, walnuts</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Saturated & trans ("bad")</h4>
+        <ul>
+          <li>Butter, cake, ice cream, packaged cookies</li>
+          <li><strong>Raise total cholesterol</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <h4>Water</h4>
+    <ul>
+      <li>60–70% of total body weight</li>
+      <li>Controls body temperature; maintains acid-base balance; regulates fluid and electrolytes; transports nutrients and waste</li>
+      <li>Sources: drinks, plus foods high in water (fresh fruits and vegetables)</li>
+      <li><strong>Intake must equal output</strong> to stay in balance</li>
+    </ul>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 3. MICRONUTRIENTS                           -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-micro" id="micro" data-key="micro">
+    <div class="concept-header">
+      <span class="section-label">Room 3 · What's in the Food: Small Amounts</span>
+      <h2>Micronutrients: Vitamins & Minerals</h2>
+      <p class="slides">From slides 6, 13–16</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="principles">
+      <p><strong>Micronutrients are needed in very small amounts, but a deficiency can be life-threatening.</strong> Vitamins are organic compounds that regulate body processes, reproduction, and growth. Minerals support energy, muscle building, nerve conduction, clotting, and immunity.</p>
+    </div>
+
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Fat-soluble: A, D, E, K</h4>
+        <ul>
+          <li><strong>Need fat</strong> to be absorbed (Room 2)</li>
+          <li><strong>Stored</strong> in the body</li>
+          <li>Too much → <strong>hypervitaminosis</strong>, which can be toxic</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Water-soluble: B complex, C</h4>
+        <ul>
+          <li><strong>Excreted in urine</strong></li>
+          <li><strong>Not stored</strong>, so must be eaten <strong>daily</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <h4>Vitamin A</h4>
+        <ul>
+          <li>Night vision, resistance to infection</li>
+          <li>Grows epithelial tissue, bones, teeth</li>
+          <li>Deficiency: <strong>night blindness</strong>, low immunity, impaired growth</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Vitamin D</h4>
+        <ul>
+          <li>The <strong>"sunshine vitamin"</strong></li>
+          <li>Vital for bone and tissue development</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Vitamin E</h4>
+        <ul>
+          <li><strong>Antioxidant:</strong> protects cells from free radicals (cell damage from things like x-ray exposure)</li>
+          <li>Supports a healthy immune system</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Vitamin K</h4>
+        <ul>
+          <li>Makes the proteins that <strong>clot blood</strong></li>
+          <li>Deficiency: <strong>bruising and bleeding</strong></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Vitamin C</h4>
+        <ul>
+          <li>Antioxidant</li>
+          <li>Builds <strong>collagen</strong>; strong immune system</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Vitamin B complex</h4>
+        <ul>
+          <li>Helps produce energy; acts as coenzymes</li>
+          <li>Helps form <strong>red blood cells</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <h4>Minerals & electrolytes</h4>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Potassium, sodium, chloride</h4>
+        <ul>
+          <li><strong>Fluid balance</strong></li>
+          <li>Nerve conduction and muscle contraction</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Calcium, phosphorus, magnesium</h4>
+        <ul>
+          <li>Build and maintain <strong>bone</strong></li>
+          <li>Nerve conduction and muscle contraction</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 4. DIGESTION & METABOLISM                   -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-body" id="body" data-key="body">
+    <div class="concept-header">
+      <span class="section-label">Room 4 · What the Body Does With It</span>
+      <h2>Digestion, Metabolism & BMR</h2>
+      <p class="slides">From slides 4, 17 (and speaker notes)</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <p class="sub-label">The path of food, in order</p>
+    <div class="numbered-list">
+      <div class="numbered-item"><span class="num">1</span><div class="num-content"><strong>Ingestion</strong>Consuming food.</div></div>
+      <div class="numbered-item"><span class="num">2</span><div class="num-content"><strong>Digestion</strong>Breaking food down into smaller nutrient particles.</div></div>
+      <div class="numbered-item"><span class="num">3</span><div class="num-content"><strong>Absorption</strong>Small particles move through the digestive tract wall into the blood.</div></div>
+      <div class="numbered-item"><span class="num">4</span><div class="num-content"><strong>Metabolism</strong>Nutrients are chemically changed into energy or stored for later. This keeps the body in homeostasis.</div></div>
+      <div class="numbered-item"><span class="num">5</span><div class="num-content"><strong>Peristalsis → elimination</strong>Wavelike muscle movement pushes waste through the intestines.</div></div>
+    </div>
+    <p class="note">Textbook figure 45.1, p. 1188.</p>
+
+    <hr class="section-divider">
+
+    <h4>Metabolism keeps two forces in balance</h4>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Anabolism: builds up</h4>
+        <ul>
+          <li>Builds more complex substances</li>
+          <li>Builds tissue, such as adding lean muscle with diet and exercise</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Catabolism: breaks down</h4>
+        <ul>
+          <li>Breaks substances into simpler ones the body can absorb and use</li>
+          <li><strong>Too much leads to starvation</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="sub-label">Where the energy goes</p>
+    <ul>
+      <li><strong>Mechanical</strong> energy for muscle contraction</li>
+      <li><strong>Electrical</strong> energy for the nervous system</li>
+      <li><strong>Thermal</strong> energy for body heat</li>
+    </ul>
+
+    <p class="sub-label">Where extra is stored</p>
+    <ul>
+      <li>Fat → adipose tissue</li>
+      <li>Protein → muscle</li>
+      <li>Glucose → liver (as glycogen)</li>
+    </ul>
+
+    <div class="callout">
+      <strong>Basal metabolic rate (BMR)</strong>
+      The minimum energy needed to keep the body running at rest while awake: breathing, circulation, heart rate, temperature regulation.
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 5. GUIDELINES & LABELS                      -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-choose" id="choose" data-key="choose">
+    <div class="concept-header">
+      <span class="section-label">Room 5 · Choosing Food</span>
+      <h2>Dietary Guidelines & Food Labels</h2>
+      <p class="slides">From slides 5, 18–20 · Textbook pp. 1190–1195, Box 45.4</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="principles">
+      <p><strong>Healthy People 2030</strong> (Box 45.1, p. 1186): choose nutrient-rich foods, which deliver more nutrients per calorie, so intake improves and fewer calories are eaten. It promotes healthy lifestyles across all cultures, races, ethnic groups, and income levels, and aims to reduce chronic disease.</p>
+    </div>
+
+    <h4>Reading a food label</h4>
+    <ul>
+      <li>% Daily Value is based on a <strong>2,000-calorie</strong> diet</li>
+      <li>Match the label line to the patient's condition:</li>
+    </ul>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Patient has</th><th>Look at</th></tr></thead>
+        <tbody>
+          <tr><th>Hypertension</th><td>Sodium</td></tr>
+          <tr><th>High cholesterol</th><td>Saturated fat, trans fat, cholesterol</td></tr>
+          <tr><th>Diabetes</th><td>Total carbohydrate and sugars; fiber helps</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="sub-label">Practice from slide 19: two almond bars, one serving each</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th class="num">BumbleBar</th><th class="num">Hershey's</th></tr></thead>
+        <tbody>
+          <tr><th>Calories</th><td class="num">230</td><td class="num">230</td></tr>
+          <tr><th>Saturated fat</th><td class="num">2 g</td><td class="num">6 g</td></tr>
+          <tr><th>Cholesterol</th><td class="num">0 mg</td><td class="num">5 mg</td></tr>
+          <tr><th>Sodium</th><td class="num">60 mg</td><td class="num">30 mg</td></tr>
+          <tr><th>Fiber</th><td class="num">4 g</td><td class="num">2 g</td></tr>
+          <tr><th>Sugars</th><td class="num">11 g</td><td class="num">19 g</td></tr>
+          <tr><th>Protein</th><td class="num">5 g</td><td class="num">4 g</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul>
+      <li><strong>Hypertension:</strong> Hershey's has less sodium</li>
+      <li><strong>High cholesterol:</strong> BumbleBar has less saturated fat and no cholesterol</li>
+      <li><strong>Diabetes:</strong> BumbleBar has less sugar and more fiber</li>
+    </ul>
+    <p class="note">Slide 20 asks the same question for chips vs. pretzels: read the labels before recommending a snack.</p>
+
+    <div class="problem"><span class="p-label">Nursing problem</span><span class="p-name">Readiness for Enhanced Nutrition</span><span>The patient wants to eat better. Teach guidelines and label reading.</span></div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 6. LIFESPAN & CULTURE                       -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-factors" id="factors" data-key="factors">
+    <div class="concept-header">
+      <span class="section-label">Room 6 · Who Is Eating</span>
+      <h2>Factors Influencing Nutrition: Lifespan, Religion & Culture</h2>
+      <p class="slides">From slides 21–22 (and speaker notes)</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <p class="sub-label">Across the lifespan, youngest to oldest</p>
+    <div class="numbered-list">
+      <div class="numbered-item"><span class="num">1</span><div class="num-content"><strong>Pregnancy</strong>Poor nutrition → low birth weight and lower survival. Protein, calcium, iron, and <strong>folic acid</strong> are crucial to prevent birth defects and anemia.</div></div>
+      <div class="numbered-item"><span class="num">2</span><div class="num-content"><strong>Infants: breast milk or formula</strong>Breastfeeding is strongly supported for the first 6 months: fewer food allergies, easier digestion, convenient, less expensive. Formula has about the same nutrients but costs more. <strong>No whole cow's milk in the first year.</strong></div></div>
+      <div class="numbered-item"><span class="num">3</span><div class="num-content"><strong>Infants: starting solids at 4–6 months</strong>Iron-rich cereal first. Introduce one new food a week, careful with high-allergy foods. Finger foods build fine-motor skills.</div></div>
+      <div class="numbered-item"><span class="num">4</span><div class="num-content"><strong>Toddlers</strong>Need more protein. Vegetables are hard to get in; role modeling helps.</div></div>
+      <div class="numbered-item"><span class="num">5</span><div class="num-content"><strong>Adolescents</strong>More protein; calcium for bone growth; iron (girls to replace menstrual loss, boys for muscle). Body-image concerns, fast food, and fad diets.</div></div>
+      <div class="numbered-item"><span class="num">6</span><div class="num-content"><strong>Older adults</strong>The challenge is choosing <strong>nutrient-dense</strong> foods. Metabolism slows; appetite, taste, smell, and <strong>thirst</strong> decline; GI issues; income and transportation limit grocery shopping.</div></div>
+    </div>
+
+    <div class="callout">
+      <strong>Older adult food ideas</strong>
+      Cream soups, meat-and-vegetable soups, cheese, eggs, peanut butter. Calcium (dairy, leafy greens, soy, nuts, fish) to prevent osteoporosis. A multivitamin with vitamin D. <strong>Avoid grapefruit juice</strong>, which interferes with medication absorption.
+    </div>
+
+    <hr class="section-divider">
+
+    <h4>Religion & culture</h4>
+    <p><strong>Patient-centered care means respecting dietary needs from cultural or religious traditions different from your own.</strong> Ask; don't assume.</p>
+    <p class="sub-label">Common religious restrictions</p>
+    <ul>
+      <li><strong>Judaism (kosher):</strong> no pork or shellfish; meat and dairy not eaten together</li>
+      <li><strong>Islam (halal):</strong> no pork or alcohol; daytime fasting during Ramadan</li>
+      <li><strong>Hinduism:</strong> no beef; many are vegetarian</li>
+      <li><strong>Buddhism:</strong> many are vegetarian</li>
+      <li><strong>Seventh-day Adventist:</strong> often vegetarian; no alcohol or caffeine</li>
+      <li><strong>Latter-day Saints (Mormon):</strong> no alcohol, coffee, or tea</li>
+      <li><strong>Catholicism:</strong> no meat on Fridays during Lent</li>
+    </ul>
+    <p class="note">Check these against your textbook: Table 45.3 and Box 45.5, p. 1195.</p>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 7. ASSESSMENT                               -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-assess" id="assess" data-key="assess">
+    <div class="concept-header">
+      <span class="section-label">Room 7 · Measure, Screen, Ask</span>
+      <h2>Nutritional Assessment</h2>
+      <p class="slides">From slides 9 (notes), 24–30</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <h4>1. Measure</h4>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Infants</h4>
+        <ul>
+          <li>Height (length)</li>
+          <li>Weight</li>
+          <li>Head circumference</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Adults</h4>
+        <ul>
+          <li>Height, weight, BMI</li>
+          <li>Waist-to-hip ratio (<strong>where</strong> fat is distributed matters)</li>
+          <li>Skinfold measurement → body-fat percentage</li>
+        </ul>
+      </div>
+    </div>
+    <p>Findings are compared with reference standards to classify weight status and disease risk.</p>
+
+    <p class="sub-label">BMI = weight (kg) ÷ height (m)²</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="num">BMI</th><th>Category</th></tr></thead>
+        <tbody>
+          <tr><td class="num">&lt; 18.5</td><td>Underweight</td></tr>
+          <tr><td class="num">18.5 – 24.9</td><td>Normal (healthy)</td></tr>
+          <tr><td class="num">25 – 29.9</td><td>Overweight</td></tr>
+          <tr><td class="num">30 or higher</td><td>Obese</td></tr>
+          <tr><td class="num">40 or higher</td><td>Morbid obesity (or &gt; 50% above ideal body weight)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="sub-label">Lab: albumin</p>
+    <p>A protein in the blood that reflects protein intake. <strong>Low albumin</strong> suggests malnutrition or low protein intake, which slows <strong>wound healing</strong> and weakens <strong>immune function</strong>.</p>
+
+    <hr class="section-divider">
+
+    <h4>2. Screen: Mini Nutritional Assessment (MNA)</h4>
+    <p>Name, DOB, sex, age, height, and weight go at the top. Score six items:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>Question</th><th class="num">Points</th></tr></thead>
+        <tbody>
+          <tr><th>A</th><td>Food intake declined in the past 3 months?</td><td class="num">0–2</td></tr>
+          <tr><th>B</th><td>Weight loss in the past 3 months</td><td class="num">0–3</td></tr>
+          <tr><th>C</th><td>Mobility</td><td class="num">0–2</td></tr>
+          <tr><th>D</th><td>Psychological stress or acute disease in past 3 months?</td><td class="num">0 or 2</td></tr>
+          <tr><th>E</th><td>Neuropsychological problems (dementia, depression)</td><td class="num">0–2</td></tr>
+          <tr><th>F</th><td>BMI (F1), or calf circumference if no BMI (F2)</td><td class="num">0–3</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card-grid">
+      <div class="card"><h4>12–14 points</h4><p>Normal nutritional status</p></div>
+      <div class="card"><h4>8–11 points</h4><p>At risk of malnutrition</p></div>
+      <div class="card"><h4>0–7 points</h4><p>Malnourished</p></div>
+    </div>
+
+    <hr class="section-divider">
+
+    <h4>3. Ask: diet & health history</h4>
+    <p>Ask <strong>every</strong> patient about typical intake, food preferences, and allergies. Also screen: age, cultural preferences, activity level, alcohol and illicit drugs, prescription and OTC medications (Box 45.6, p. 1199).</p>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>24-hour recall</h4>
+        <ul>
+          <li>Everything eaten in the previous day</li>
+          <li>Depends on the patient's memory of foods and amounts</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Food diary</h4>
+        <ul>
+          <li><strong>3 to 5 days</strong> of entries</li>
+          <li>Must include a typical <strong>weekend</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="sub-label">Allergy vs. intolerance</p>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Food allergy</h4>
+        <ul>
+          <li><strong>Immune system</strong> response: the body wrongly sees a food as harmful and makes antibodies</li>
+          <li><strong>Life-threatening</strong></li>
+          <li>Common: peanuts, shellfish, wheat; <strong>alpha-gal</strong> (red meat, after a Lone Star tick bite)</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Food intolerance</h4>
+        <ul>
+          <li><strong>Digestive system</strong> response: irritation, or inability to break the food down</li>
+          <li><strong>Uncomfortable</strong>, not life-threatening</li>
+          <li>Lactose intolerance; gluten (celiac: wheat, rye, barley, oats)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 8. ALTERED NUTRITION                        -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-altered" id="altered" data-key="altered">
+    <div class="concept-header">
+      <span class="section-label">Room 8 · When Balance Fails</span>
+      <h2>Malnutrition, Obesity & Physical Signs</h2>
+      <p class="slides">From slides 23, 25, 35–36</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Too little</h4>
+        <ul>
+          <li><strong>Malnutrition:</strong> from digestion or absorption problems, illness, increased metabolic needs, or inadequate or imbalanced intake</li>
+          <li><strong>Cachexia:</strong> physical wasting with weight and muscle loss, often in terminal illness when the person can't eat enough</li>
+          <li>Screen with the MNA; check albumin (Room 7)</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Too much</h4>
+        <ul>
+          <li><strong>Overweight:</strong> BMI 25–29.9</li>
+          <li><strong>Obesity:</strong> BMI 30 or higher</li>
+          <li><strong>Morbid obesity:</strong> BMI over 40, or more than 50% above ideal body weight</li>
+          <li>BMI shows the extent of obesity and its health risks</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="problem"><span class="p-label">Nursing problem</span><span class="p-name">Overweight</span><span>Based on BMI. Plan with the patient and a dietitian.</span></div>
+
+    <p class="sub-label">Psychological causes</p>
+    <ul>
+      <li><strong>Anorexia:</strong> loss of appetite (a symptom)</li>
+      <li><strong>Anorexia nervosa:</strong> a serious disorder; life-threatening restriction driven by an altered mental state</li>
+      <li><strong>Bulimia nervosa:</strong> bingeing (eating excessive food) followed by purging (vomiting)</li>
+    </ul>
+
+    <hr class="section-divider">
+
+    <h4>Physical signs of poor nutrition, head to toe</h4>
+    <p class="note" style="margin-top:0">Box 45.4, p. 1200. Slide 36 asks which person looks healthier: these are the signs that tell you.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Area</th><th>Signs</th></tr></thead>
+        <tbody>
+          <tr><th>General</th><td>Fatigue, weakness, weight change, muscle wasting, decreased mobility</td></tr>
+          <tr><th>Mental</th><td>Inattentive, irritable</td></tr>
+          <tr><th>Hair</th><td>Brittle, dry, thin, recent hair loss</td></tr>
+          <tr><th>Lips & mouth</th><td>Dry, red lips; lesions at the corners of the mouth; oral lesions; missing or broken teeth</td></tr>
+          <tr><th>Skin</th><td>Rough, dry, scaly, pale</td></tr>
+          <tr><th>Heart</th><td>Tachycardia, abnormal rhythm, elevated BP</td></tr>
+          <tr><th>GI</th><td>Anorexia, indigestion, constipation or diarrhea</td></tr>
+          <tr><th>Nails</th><td>Brittle, ridged</td></tr>
+          <tr><th>Extremities</th><td>Edema, tender calf, burning or tingling in hands, legs, and feet</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 9. SWALLOWING & FEEDING                     -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-swallow" id="swallow" data-key="swallow">
+    <div class="concept-header">
+      <span class="section-label">Room 9 · Getting Food In Safely</span>
+      <h2>Dysphagia, Aspiration & Feeding Assistance</h2>
+      <p class="slides">From slides 31–34</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="principles">
+      <p><strong>Dysphagia</strong> is difficulty swallowing. It can lead to malnutrition. <strong>Aspiration</strong> is inhaling fluid or foreign matter into the lungs and bronchi.</p>
+    </div>
+
+    <p class="sub-label">How it progresses</p>
+    <div class="numbered-list">
+      <div class="numbered-item"><span class="num">1</span><div class="num-content"><strong>Cause</strong>Often residual effects of stroke or other injury (Box 45.7, p. 1200).</div></div>
+      <div class="numbered-item"><span class="num">2</span><div class="num-content"><strong>Signs of dysphagia</strong>Coughing while eating; change in voice tone or quality; abnormal gag; drooling; incomplete lip closure; poor tongue control; excessive chewing; gagging before swallowing; failure to swallow; <strong>pocketing</strong> (food held in the cheek); regurgitation; refusing to eat.</div></div>
+      <div class="numbered-item"><span class="num">3</span><div class="num-content"><strong>Signs of aspiration: monitor closely</strong>Coughing, wheezing, dyspnea, apnea, bradycardia, hypotension. Stroke patients may have <strong>silent aspiration</strong> with no cough.</div></div>
+      <div class="numbered-item"><span class="num">4</span><div class="num-content"><strong>Consequences</strong>Aspiration pneumonia, dehydration, poor nutrition status, weight loss.</div></div>
+    </div>
+
+    <p class="sub-label">Screening and testing</p>
+    <ul>
+      <li><strong>Bedside dysphagia screen:</strong> quickly finds swallowing problems so you can consult a <strong>registered dietitian</strong> or <strong>speech pathologist</strong></li>
+      <li><strong>Swallow study:</strong> for anyone at risk of aspiration</li>
+      <li>May lead to a <strong>thickened liquids</strong> diet (Room 10)</li>
+    </ul>
+
+    <div class="problem"><span class="p-label">Nursing problem</span><span class="p-name">Impaired Swallowing</span></div>
+    <div class="problem"><span class="p-label">Nursing problem</span><span class="p-name">Risk for Aspiration</span></div>
+
+    <hr class="section-divider">
+
+    <h4>Assistance with feeding</h4>
+    <p><strong>Who needs help:</strong> patients with limited hand or arm mobility, poor activity tolerance, poor cognitive or physical state, or poor vision.</p>
+    <ul>
+      <li>Elevate the head of the bed to <strong>90 degrees</strong> unless contraindicated (aspiration precautions skill, pp. 1219–1221)</li>
+      <li>Watch the patient's ability to swallow and for the dysphagia signs above</li>
+      <li>Use <strong>adaptive equipment</strong>: built-up utensils, divided plates, two-handled cups (Fig. 45.7)</li>
+      <li><strong>Visually impaired:</strong> describe the plate like a clock ("meat at 12, green beans at 3")</li>
+      <li>Note any difficulty the patient or caregiver has with feeding</li>
+    </ul>
+    <div class="callout">
+      <strong>Document</strong>
+      Food intake as a <strong>percentage eaten (0–100%)</strong>. Liquids in <strong>milliliters</strong>.
+    </div>
+
+    <div class="problem"><span class="p-label">Nursing problem</span><span class="p-name">Feeding: Self-Care Deficit</span></div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 10. DIETS                                   -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-diets" id="diets" data-key="diets">
+    <div class="concept-header">
+      <span class="section-label">Room 10 · The Diet Order</span>
+      <h2>Diet Progression & Therapeutic Diets</h2>
+      <p class="slides">From slide 37 · Box 45.10, p. 1208</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="principles">
+      <p><strong>Collaborate with a registered dietitian.</strong> A patient who was ill or NPO gets an order to advance the diet slowly, one rung at a time, as tolerated.</p>
+    </div>
+
+    <p class="sub-label">The diet ladder, bottom to top</p>
+    <div class="numbered-list">
+      <div class="numbered-item"><span class="num">1</span><div class="num-content"><strong>NPO</strong>Nothing by mouth: diagnostic tests or procedures, GI blockage, vomiting.</div></div>
+      <div class="numbered-item"><span class="num">2</span><div class="num-content"><strong>Clear liquid</strong>See-through, <strong>no pulp</strong>.</div></div>
+      <div class="numbered-item"><span class="num">3</span><div class="num-content"><strong>Full liquid</strong>Anything that is liquid at body temperature.</div></div>
+      <div class="numbered-item"><span class="num">4</span><div class="num-content"><strong>Pureed</strong>"Blended."</div></div>
+      <div class="numbered-item"><span class="num">5</span><div class="num-content"><strong>Mechanical soft</strong>Modified food consistency, easier to chew.</div></div>
+      <div class="numbered-item"><span class="num">6</span><div class="num-content"><strong>Regular (general)</strong>"Diet as tolerated."</div></div>
+    </div>
+
+    <p class="sub-label">Modified for a problem</p>
+    <div class="card-grid">
+      <div class="card">
+        <h4>Thickened liquids</h4>
+        <p>For <strong>dysphagia</strong> and aspiration risk (Room 9).</p>
+      </div>
+      <div class="card">
+        <h4>Diabetic (ADA)</h4>
+        <p>Controls <strong>carbohydrate</strong> intake (Room 2).</p>
+      </div>
+      <div class="card">
+        <h4>Cardiac</h4>
+        <p><strong>Low cholesterol, low sodium</strong>. Use the label lines in Room 5.</p>
+      </div>
+      <div class="card">
+        <h4>Renal</h4>
+        <p>Restricts <strong>potassium, sodium, protein, phosphorus</strong>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- TAKEAWAYS                                   -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-review" id="review" data-key="review">
+    <div class="concept-header">
+      <span class="section-label">Walk-through · Review</span>
+      <h2>Ten Things to Carry Out of This Chapter</h2>
+    </div>
+    <ol style="line-height: 1.8;">
+      <li>Nutrition is a balance: too little intake for the body's needs is malnutrition; too much for its use is obesity.</li>
+      <li>Carbs and protein are 4 kcal/g; fat is 9. Carbs are the main fuel.</li>
+      <li>Amino acids and water-soluble vitamins (B, C) are not stored, so they are needed every day.</li>
+      <li>Fat-soluble vitamins (A, D, E, K) need fat to absorb and can build up to toxic levels.</li>
+      <li>Vitamin K clots, A sees at night, D builds bone, C builds collagen, B makes red blood cells.</li>
+      <li>Read labels by condition: sodium for HTN, saturated fat and cholesterol for high cholesterol, carbs and sugar for diabetes.</li>
+      <li>An allergy is an immune response and can kill; an intolerance is a digestive response and is uncomfortable.</li>
+      <li>BMI: 18.5–24.9 normal, 25–29.9 overweight, 30+ obese, 40+ morbid obesity. MNA: 12–14 normal, 8–11 at risk, 0–7 malnourished.</li>
+      <li>Dysphagia leads to aspiration. Watch for coughing, voice change, and pocketing; stroke patients can aspirate silently. HOB at 90 degrees.</li>
+      <li>Advance diets one rung at a time: NPO → clear → full liquid → pureed → mechanical soft → regular.</li>
+    </ol>
+  </section>
+</div>
+
+<div class="save-status" id="saveStatus" role="status" aria-live="polite">Saved</div>
+
+<script>
+(async function() {
+  var db = null;
+  try { db = await (window.claude && claude.use ? claude.use("db") : Promise.resolve(null)); } catch (e) { db = null; }
+  var status = document.getElementById("saveStatus");
+  var sections = document.querySelectorAll("[data-key]");
+  var timers = {};
+
+  function showStatus(text, cls) {
+    status.textContent = text;
+    status.className = "save-status visible" + (cls ? " " + cls : "");
+    clearTimeout(status._hide);
+    if (text === "Saved") {
+      status._hide = setTimeout(function() { status.classList.remove("visible"); }, 1500);
+    }
+  }
+
+  if (db) {
+    try {
+      var snap = await db.collection("sections").get();
+      snap.docs.forEach(function(doc) {
+        if (!doc.exists) return;
+        var d = doc.data();
+        if (!d || !d.html) return;
+        var el = document.querySelector('[data-key="' + doc.id + '"]');
+        if (el) el.innerHTML = d.html;
+      });
+    } catch (e) {}
+  } else {
+    sections.forEach(function(sec) {
+      try {
+        var saved = localStorage.getItem("nu_" + sec.dataset.key);
+        if (saved) sec.innerHTML = saved;
+      } catch (e) {}
+    });
+  }
+
+  sections.forEach(function(sec) {
+    sec.contentEditable = "true";
+    sec.spellcheck = false;
+    sec.addEventListener("input", function() {
+      var key = sec.dataset.key;
+      showStatus("Editing...", "saving");
+      clearTimeout(timers[key]);
+      timers[key] = setTimeout(function() { save(key, sec); }, 1200);
+    });
+  });
+
+  async function save(key, sec) {
+    if (!db) {
+      try { localStorage.setItem("nu_" + key, sec.innerHTML); } catch (e) {}
+      showStatus("Saved");
+      return;
+    }
+    showStatus("Saving...", "saving");
+    try {
+      await db.doc("sections/" + key).set({ html: sec.innerHTML });
+      showStatus("Saved");
+    } catch (e) {
+      showStatus("Save failed", "saving");
+    }
+  }
+})();
+</script>
