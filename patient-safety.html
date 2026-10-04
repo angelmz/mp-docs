@@ -1,0 +1,1220 @@
+<title>Patient Safety & Quality</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400;0,600;0,700;1,400&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one reading column; each concept is a "room", ordered big picture → who is at risk → assessment → hazards → restraints */
+:root {
+  --ground: #F2F1EC;
+  --surface: #E9E8E2;
+  --text: #2D2A25;
+  --text-muted: #6F6A63;
+  --border: #D6D4CE;
+  --safety: #4A6FA5; --safety-bg: #EDF1F6;
+  --environ: #6B7A4A; --environ-bg: #F0F2ED;
+  --lifespan: #6B5B8A; --lifespan-bg: #F0EFF3;
+  --individual: #8B6C4E; --individual-bg: #F3F0ED;
+  --assess: #5E7A8C; --assess-bg: #EFF2F4;
+  --goals: #3D6E86; --goals-bg: #ECF0F3;
+  --falls: #A07F1E; --falls-bg: #F6F2E8;
+  --fire: #B4552D; --fire-bg: #F8EEEA;
+  --meds: #A0566E; --meds-bg: #F6EEF0;
+  --infection: #3B7969; --infection-bg: #EBF2F0;
+  --violence: #9A4A4A; --violence-bg: #F5EDED;
+  --restraints: #5A5F73; --restraints-bg: #EEEFF1;
+  --review: #4F4A44; --review-bg: #EDEDEC;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+  color-scheme: dark;
+  --ground: #1C1F2A;
+  --surface: #262A38;
+  --text: #D3CFC6;
+  --text-muted: #908B84;
+  --border: #3A3E4E;
+  --safety: #8FA6C7; --safety-bg: #242D40;
+  --environ: #A3AD8F; --environ-bg: #2A2F30;
+  --lifespan: #A399B6; --lifespan-bg: #2A2A3B;
+  --individual: #B7A491; --individual-bg: #302D30;
+  --assess: #9BADB8; --assess-bg: #282F3C;
+  --goals: #87A5B4; --goals-bg: #222D3B;
+  --falls: #C4B074; --falls-bg: #343028;
+  --fire: #D0967D; --fire-bg: #37292B;
+  --meds: #C496A5; --meds-bg: #342936;
+  --infection: #85ACA2; --infection-bg: #222F35;
+  --violence: #C08F8F; --violence-bg: #332730;
+  --restraints: #999CA8; --restraints-bg: #272B37;
+  --review: #928F8B; --review-bg: #25272F;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #1C1F2A;
+  --surface: #262A38;
+  --text: #D3CFC6;
+  --text-muted: #908B84;
+  --border: #3A3E4E;
+  --safety: #8FA6C7; --safety-bg: #242D40;
+  --environ: #A3AD8F; --environ-bg: #2A2F30;
+  --lifespan: #A399B6; --lifespan-bg: #2A2A3B;
+  --individual: #B7A491; --individual-bg: #302D30;
+  --assess: #9BADB8; --assess-bg: #282F3C;
+  --goals: #87A5B4; --goals-bg: #222D3B;
+  --falls: #C4B074; --falls-bg: #343028;
+  --fire: #D0967D; --fire-bg: #37292B;
+  --meds: #C496A5; --meds-bg: #342936;
+  --infection: #85ACA2; --infection-bg: #222F35;
+  --violence: #C08F8F; --violence-bg: #332730;
+  --restraints: #999CA8; --restraints-bg: #272B37;
+  --review: #928F8B; --review-bg: #25272F;
+}
+
+body {
+  background: var(--ground);
+  color: var(--text);
+  font-family: 'Figtree', 'Segoe UI', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  padding-inline: 24px;
+  padding-block: 40px 80px;
+}
+@media (max-width: 500px) { body { padding-inline: 16px; } }
+.doc { max-width: 760px; margin: 0 auto; }
+
+h1 {
+  font-family: 'Vollkorn', 'Georgia', serif;
+  font-weight: 700;
+  font-size: 2rem;
+  line-height: 1.2;
+  text-wrap: balance;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+h2 {
+  font-family: 'Vollkorn', 'Georgia', serif;
+  font-weight: 600;
+  font-size: 1.35rem;
+  line-height: 1.3;
+  text-wrap: balance;
+  margin: 0 0 16px;
+}
+h4 {
+  font-family: 'Vollkorn', 'Georgia', serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin: 0 0 6px;
+}
+.subtitle { color: var(--text-muted); margin: 6px 0 0; font-size: 0.95rem; }
+
+/* ── Map ── */
+.map { display: flex; flex-wrap: wrap; gap: 8px; margin: 36px 0 48px; }
+.map-item {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 0.78rem; font-weight: 500;
+  color: var(--text-muted);
+  padding: 5px 10px; border-radius: 6px;
+  background: var(--surface);
+  white-space: nowrap; text-decoration: none;
+}
+.map-item:hover, .map-item:focus-visible { color: var(--text); }
+.map-item:focus-visible { outline: 2px solid var(--text-muted); outline-offset: 2px; }
+.map-item .step { font-variant-numeric: tabular-nums; font-weight: 600; }
+.map-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── Sections ── */
+.concept {
+  margin-bottom: 48px;
+  border-left: 4px solid var(--c);
+  padding-left: 24px;
+  scroll-margin-top: 16px;
+}
+@media (max-width: 500px) { .concept { padding-left: 14px; } }
+.concept-header {
+  background: var(--c-bg);
+  padding: 14px 18px 14px 42px;
+  border-radius: 6px;
+  margin: 0 0 20px -24px;
+}
+@media (max-width: 500px) { .concept-header { margin-left: -14px; padding-left: 28px; } }
+.concept-header h2 { margin-bottom: 0; }
+.concept-header .section-label {
+  font-size: 0.72rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 4px; display: block;
+  color: var(--c);
+}
+.concept-header .slides { font-size: 0.78rem; color: var(--text-muted); margin: 4px 0 0; }
+
+
+.s-safety { --c: var(--safety); --c-bg: var(--safety-bg); }
+.s-environ { --c: var(--environ); --c-bg: var(--environ-bg); }
+.s-lifespan { --c: var(--lifespan); --c-bg: var(--lifespan-bg); }
+.s-individual { --c: var(--individual); --c-bg: var(--individual-bg); }
+.s-assess { --c: var(--assess); --c-bg: var(--assess-bg); }
+.s-goals { --c: var(--goals); --c-bg: var(--goals-bg); }
+.s-falls { --c: var(--falls); --c-bg: var(--falls-bg); }
+.s-fire { --c: var(--fire); --c-bg: var(--fire-bg); }
+.s-meds { --c: var(--meds); --c-bg: var(--meds-bg); }
+.s-infection { --c: var(--infection); --c-bg: var(--infection-bg); }
+.s-violence { --c: var(--violence); --c-bg: var(--violence-bg); }
+.s-restraints { --c: var(--restraints); --c-bg: var(--restraints-bg); }
+.s-review { --c: var(--review); --c-bg: var(--review-bg); }
+
+/* ── Content ── */
+p { margin: 0 0 12px; }
+ul, ol { margin: 0 0 12px; padding-left: 20px; }
+li { margin-bottom: 4px; }
+li::marker { color: var(--text-muted); }
+strong { font-weight: 600; }
+
+.principles { background: var(--surface); border-radius: 6px; padding: 16px 18px; margin-bottom: 20px; }
+.principles p { margin: 0; }
+.principles p + p { margin-top: 8px; }
+
+.sub-label {
+  font-weight: 600; font-size: 0.82rem;
+  color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin: 18px 0 6px;
+}
+
+.callout { background: var(--surface); border-radius: 6px; padding: 12px 16px; margin: 14px 0; font-size: 0.93rem; }
+.callout strong:first-child { display: block; margin-bottom: 4px; }
+.callout.alert { background: var(--violence-bg); }
+.callout.alert strong:first-child { color: var(--violence); }
+
+/* Nursing problem chip: the slide-34 list, placed in the room it belongs to */
+.problem {
+  display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin: 14px 0;
+  font-size: 0.92rem;
+}
+.problem .p-label {
+  font-size: 0.7rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--c);
+}
+.problem .p-name { font-weight: 600; }
+
+.note { font-size: 0.88rem; color: var(--text-muted); margin-top: 8px; }
+
+hr.section-divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+/* ── Picture slot for the memory palace ── */
+.picture {
+  border: 1.5px dashed var(--c);
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin: 0 0 20px;
+  font-size: 0.9rem;
+}
+.picture .pic-label {
+  display: block;
+  font-size: 0.72rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--c);
+  margin-bottom: 2px;
+}
+.picture .pic-text { min-height: 1.6em; }
+.picture .pic-text:empty::before {
+  content: "Click here to write the picture you'll place in this room.";
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ── Grids ── */
+.compare, .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; margin: 16px 0; }
+@media (max-width: 600px) { .compare, .card-grid { grid-template-columns: 1fr; } }
+.compare > *, .card-grid > * { min-width: 0; }
+.compare-block { border-top: 3px solid var(--c); padding-top: 12px; }
+.compare-block ul { margin-bottom: 0; }
+
+.card { border: 1px solid var(--border); border-top: 3px solid var(--c); border-radius: 6px; padding: 12px 14px; }
+.card h4 {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.8rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--c);
+  margin-bottom: 6px;
+}
+.card ul { font-size: 0.92rem; margin: 0; }
+.card p { font-size: 0.92rem; margin: 0 0 6px; }
+.card .kcal { font-variant-numeric: tabular-nums; font-weight: 600; }
+
+/* ── Numbered sequences (real order only) ── */
+.numbered-list { display: flex; flex-direction: column; gap: 12px; margin: 16px 0; }
+.numbered-item { display: grid; grid-template-columns: 32px 1fr; gap: 10px; align-items: start; }
+.numbered-item .num {
+  font-family: 'Vollkorn', serif; font-weight: 700; font-size: 1.1rem;
+  color: var(--c); text-align: center; font-variant-numeric: tabular-nums;
+}
+.numbered-item .num-content { font-size: 0.93rem; min-width: 0; }
+.numbered-item .num-content strong { display: block; margin-bottom: 2px; }
+
+/* ── Tables ── */
+.table-wrap { overflow-x: auto; margin: 16px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--border); }
+thead th {
+  font-size: 0.78rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--c);
+  border-bottom: 2px solid var(--c);
+}
+tbody th { font-weight: 600; white-space: nowrap; color: var(--text); }
+td.num, th.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ── Editable ── */
+[contenteditable] { outline: none; }
+[contenteditable]:focus-within { background: color-mix(in srgb, var(--text) 3%, transparent); border-radius: 3px; }
+.save-status {
+  position: fixed;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  right: 16px;
+  font-size: 0.78rem; font-weight: 500;
+  padding: 6px 12px; border-radius: 6px;
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  opacity: 0; transition: opacity 0.3s;
+  pointer-events: none; z-index: 100;
+}
+.save-status.visible { opacity: 1; }
+.save-status.saving { color: var(--text); }
+@media (prefers-reduced-motion: reduce) { .save-status { transition: none; } }
+</style>
+
+<div class="doc">
+  <header>
+    <h1>Patient Safety & Quality</h1>
+    <p class="subtitle">Fundamentals: reorganized by concept, each hazard in one place, from the big picture to the bedside</p>
+  </header>
+
+  <nav class="map" aria-label="Rooms">
+    <a class="map-item" href="#safety"><span class="map-dot" style="background:var(--safety)"></span><span class="step">1</span> Culture of Safety</a>
+    <a class="map-item" href="#environ"><span class="map-dot" style="background:var(--environ)"></span><span class="step">2</span> Environment & Basic Needs</a>
+    <a class="map-item" href="#lifespan"><span class="map-dot" style="background:var(--lifespan)"></span><span class="step">3</span> Lifespan</a>
+    <a class="map-item" href="#individual"><span class="map-dot" style="background:var(--individual)"></span><span class="step">4</span> Individual Risks</a>
+    <a class="map-item" href="#assess"><span class="map-dot" style="background:var(--assess)"></span><span class="step">5</span> Assessment</a>
+    <a class="map-item" href="#goals"><span class="map-dot" style="background:var(--goals)"></span><span class="step">6</span> Performance Goals</a>
+    <a class="map-item" href="#falls"><span class="map-dot" style="background:var(--falls)"></span><span class="step">7</span> Falls</a>
+    <a class="map-item" href="#fire"><span class="map-dot" style="background:var(--fire)"></span><span class="step">8</span> Fire, Electrical & Chemical</a>
+    <a class="map-item" href="#meds"><span class="map-dot" style="background:var(--meds)"></span><span class="step">9</span> Medication & Procedure</a>
+    <a class="map-item" href="#infection"><span class="map-dot" style="background:var(--infection)"></span><span class="step">10</span> Infection</a>
+    <a class="map-item" href="#violence"><span class="map-dot" style="background:var(--violence)"></span><span class="step">11</span> Violence, Disasters & Seizures</a>
+    <a class="map-item" href="#restraints"><span class="map-dot" style="background:var(--restraints)"></span><span class="step">12</span> Restraints</a>
+    <a class="map-item" href="#review"><span class="map-dot" style="background:var(--review)"></span>Takeaways</a>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 1. SAFETY & CULTURE OF SAFETY               -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-safety" id="safety" data-key="safety">
+    <div class="concept-header">
+      <span class="section-label">Room 1 · Foundation</span>
+      <h2>What Safety Is & the Culture of Safety</h2>
+      <p class="slides">From slides 2–3, 15, 20 (NPG #2)</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="principles">
+      <p><strong>Patient safety</strong> is the prevention of errors and adverse effects to patients associated with health care. It is freedom from psychological and physical injury, and it is <strong>a basic human need</strong>.</p>
+    </div>
+
+    <p class="sub-label">A culture of safety has six parts</p>
+    <div class="card-grid">
+      <div class="card"><h4>Regulatory bodies</h4><p>The Joint Commission, CMS, and state agencies set and enforce standards.</p></div>
+      <div class="card"><h4>National Performance Goals</h4><p>The yearly list of safety priorities (Room 6).</p></div>
+      <div class="card"><h4>High-risk nature, with determination</h4><p>Admit that health care is high-risk, and commit to consistently safe care anyway.</p></div>
+      <div class="card"><h4>Blame-free environment</h4><p>Staff can report errors and near misses without fear of punishment, so the system gets fixed.</p></div>
+      <div class="card"><h4>Collaboration across levels</h4><p>Everyone, from aide to administrator, works together on safety problems.</p></div>
+      <div class="card"><h4>Committed resources</h4><p>The organization pays for staffing, equipment, and training to stay safe.</p></div>
+    </div>
+
+    <p class="sub-label">The same idea shows up as</p>
+    <ul>
+      <li><strong>NPG #2, Culture of Safety:</strong> a safety program, a code of conduct, and a workplace violence program (Room 11)</li>
+      <li><strong>Workplace culture as an individual risk:</strong> whether the workplace has a safety culture, resources, and accountability</li>
+    </ul>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 2. ENVIRONMENT & BASIC NEEDS                -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-environ" id="environ" data-key="environ">
+    <div class="concept-header">
+      <span class="section-label">Room 2 · Where the Patient Lives</span>
+      <h2>Environmental Safety & Basic Needs</h2>
+      <p class="slides">From slides 4–7, 44 (home basic needs)</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="principles">
+      <p><strong>A patient's environment is all the physical and psychosocial factors that affect their life and survival.</strong> It goes wherever they go: hospital, long-term care facility, clinic, school, home.</p>
+    </div>
+
+    <p class="sub-label">Basic needs the environment must meet</p>
+    <div class="card-grid">
+      <div class="card">
+        <h4>Oxygen</h4>
+        <ul>
+          <li>Carbon monoxide: install CO detectors; never run heaters or cars in closed spaces</li>
+          <li>Home O2: <strong>no smoking or open flames</strong>. Oxygen feeds fire (Room 8).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Nutrition & food safety</h4>
+        <ul>
+          <li>Wash hands and surfaces; refrigerate leftovers promptly</li>
+          <li>Cook meats fully; check expiration dates</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Temperature</h4>
+        <ul>
+          <li>Too hot: heat exhaustion, heat stroke</li>
+          <li>Too cold: frostbite, hypothermia</li>
+          <li>Infants and older adults are most at risk</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Freedom from pathogens</h4>
+        <ul>
+          <li>Hand hygiene, immunizations, and preventing HAIs</li>
+          <li>Details in Room 10</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <p class="sub-label">The five common hazards, and where each one lives</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Hazard</th><th>Room</th></tr></thead>
+        <tbody>
+          <tr><th>Motor vehicle accidents</th><td>3 (adolescents, driver education), 4 (sensory impairment), 7 (transport)</td></tr>
+          <tr><th>Poison</th><td>8</td></tr>
+          <tr><th>Falls</th><td>7</td></tr>
+          <tr><th>Fire</th><td>8</td></tr>
+          <tr><th>Disasters</th><td>11</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 3. LIFESPAN                                 -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-lifespan" id="lifespan" data-key="lifespan">
+    <div class="concept-header">
+      <span class="section-label">Room 3 · Who Is at Risk: Age</span>
+      <h2>Risks & Interventions Across the Lifespan</h2>
+      <p class="slides">Risks from slides 10–14 paired with interventions from slides 38–42</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <p class="note" style="margin-top:0">Each age shows its risks next to its interventions. The interventions answer the risks.</p>
+
+    <h4>Infant, toddler, preschooler</h4>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Risks</h4>
+        <ul>
+          <li><strong>SIDS</strong></li>
+          <li>Poisoning, choking, aspiration</li>
+          <li>Falls, burns, drowning</li>
+          <li><strong>Injuries are the leading cause of death after age 1</strong></li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Interventions</h4>
+        <ul>
+          <li><strong>Safe sleep:</strong> on the back, firm mattress, nothing soft in the crib</li>
+          <li>Feeding: avoid choking hazards (small, round, hard foods and objects)</li>
+          <li>Baby-proofing: lock up poisons and medicines, gate stairs, cover outlets</li>
+          <li>Swimming: never leave a child alone in or near water</li>
+          <li>Walking and running: supervise; stranger danger</li>
+          <li>Immunizations; car seats</li>
+        </ul>
+      </div>
+    </div>
+
+    <h4>School-age child</h4>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Risks</h4>
+        <ul>
+          <li>More confidence, less supervision</li>
+          <li>New environments and people</li>
+          <li>Expanded motor activities</li>
+          <li>School violence</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Interventions</h4>
+        <ul>
+          <li>Bicycling and skateboarding: helmets and pads</li>
+          <li>Sports safety: proper equipment</li>
+          <li>Electrical equipment: teach safe use</li>
+          <li><strong>Firearms safety:</strong> locked and unloaded, ammunition stored separately</li>
+        </ul>
+      </div>
+    </div>
+
+    <h4>Adolescent</h4>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Risks</h4>
+        <ul>
+          <li>More independence; forming an identity</li>
+          <li>Peer pressure; hormones</li>
+          <li>Substance abuse</li>
+          <li><strong>Suicide</strong> (see NPG #8, Room 6)</li>
+          <li><strong>Motor vehicle accidents</strong></li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Interventions</h4>
+        <ul>
+          <li>Driver education</li>
+          <li>Teach about smoking, alcohol, and drugs</li>
+          <li>School and community activities; mentors</li>
+          <li>Internet safety</li>
+        </ul>
+      </div>
+    </div>
+
+    <h4>Adult</h4>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Risks</h4>
+        <ul>
+          <li>Lifestyle habits: stress, substance use, smoking</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Interventions: address lifestyle factors</h4>
+        <ul>
+          <li>Childrearing stress; high stress overall</li>
+          <li>Inadequate nutrition</li>
+          <li>Firearms</li>
+          <li>Alcohol and drugs</li>
+          <li>Mental health</li>
+        </ul>
+      </div>
+    </div>
+
+    <h4>Older adult</h4>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Risks</h4>
+        <ul>
+          <li><strong>Falls</strong> (Room 7)</li>
+          <li>Cognitive decline; dementia</li>
+          <li>Wandering</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Interventions</h4>
+        <ul>
+          <li>Keep them <strong>as independent as possible</strong></li>
+          <li>Fall prevention; exercise; safety equipment (grab bars, shower chair)</li>
+          <li>Vision and hearing exams</li>
+          <li>Medication organizers</li>
+          <li>Toileting schedules</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 4. INDIVIDUAL RISKS                         -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-individual" id="individual" data-key="individual">
+    <div class="concept-header">
+      <span class="section-label">Room 4 · Who Is at Risk: The Person</span>
+      <h2>Individual Risk Factors</h2>
+      <p class="slides">From slides 15–17</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="card-grid">
+      <div class="card">
+        <h4>Lifestyle</h4>
+        <ul>
+          <li>Substance abuse</li>
+          <li>Dangerous jobs; reckless behavior; risk takers</li>
+          <li>Stress and anxiety (narrows attention)</li>
+          <li>Medications (drowsiness, dizziness)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Workplace culture</h4>
+        <ul>
+          <li>Is there a safety culture (Room 1)?</li>
+          <li>Are there resources and accountability?</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Impaired mobility</h4>
+        <ul>
+          <li>Falls</li>
+          <li>Burns (can't move away from heat)</li>
+          <li>Can't get up to ask for help</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Sensory, cognitive, or communication impairment</h4>
+        <ul>
+          <li>Falls</li>
+          <li>Motor vehicles (can't see or hear traffic)</li>
+          <li>Building structures (stairs, curbs)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Economic resources</h4>
+        <ul>
+          <li>Behavioral health issues; homelessness</li>
+          <li>Limited access to health care</li>
+          <li>Can't afford safe housing, equipment, or care</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Lack of safety awareness</h4>
+        <ul>
+          <li>Lack of knowledge, or lack of care, about hazards</li>
+          <li>The fix is teaching</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 5. ASSESSMENT                               -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-assess" id="assess" data-key="assess">
+    <div class="concept-header">
+      <span class="section-label">Room 5 · Finding the Risk</span>
+      <h2>Nursing Assessment for Safety</h2>
+      <p class="slides">From slides 33–35, 37 (fall assessment from slide 36 is in Room 7)</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="principles">
+      <p><strong>Start patient-centered: ask them.</strong> What does the patient see as their risks? Have they fallen? What worries them at home?</p>
+    </div>
+
+    <h4>1. The patient</h4>
+    <div class="card-grid">
+      <div class="card"><h4>Nursing history</h4><p>Past falls, injuries, accidents; home situation.</p></div>
+      <div class="card"><h4>Physical examination</h4><p>Gait, balance, strength, vision, hearing, cognition.</p></div>
+      <div class="card"><h4>Developmental status</h4><p>Match the risks to the age (Room 3).</p></div>
+      <div class="card"><h4>Medication review</h4><p>Sedatives, opioids, BP drugs, diuretics, and many medicines at once raise risk (Room 9).</p></div>
+      <div class="card"><h4>Cultural assessment</h4><p>Beliefs and practices that shape safety choices.</p></div>
+      <div class="card"><h4>Health literacy</h4><p>Can they read and use the safety teaching you give?</p></div>
+    </div>
+
+    <h4>2. The environment</h4>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Health care setting</h4>
+        <ul>
+          <li>Risk for medical errors (Room 9)</li>
+          <li>Disaster readiness (Room 11)</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Home setting</h4>
+        <ul>
+          <li>Hazard assessment, room by room: lighting, rugs, stairs, bathroom, smoke and CO detectors, how medicines and chemicals are stored</li>
+        </ul>
+      </div>
+    </div>
+
+    <h4>3. Psychosocial & economic resources</h4>
+    <ul>
+      <li><strong>Caregiver abilities:</strong> can the caregiver physically and mentally keep the patient safe?</li>
+      <li><strong>Financial stability:</strong> can they afford safety equipment, medicines, and repairs? (Room 4)</li>
+    </ul>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 6. NATIONAL PERFORMANCE GOALS               -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-goals" id="goals" data-key="goals">
+    <div class="concept-header">
+      <span class="section-label">Room 6 · The Rule Book</span>
+      <h2>2026 National Performance Goals</h2>
+      <p class="slides">From slides 18–26</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <p>Fourteen goals, in order. Each goal's details are listed here, and the room that covers the hazard is named in parentheses.</p>
+
+    <div class="numbered-list">
+      <div class="numbered-item"><span class="num">1</span><div class="num-content"><strong>Right Patient, Right Care</strong>Two patient identifiers (name and DOB, never room number); label specimens in front of the patient; hand-off communication; Universal Protocol for surgery (verify, mark the site, time-out). (Room 9)</div></div>
+      <div class="numbered-item"><span class="num">2</span><div class="num-content"><strong>Culture of Safety</strong>Safety program; code of conduct; workplace violence program. (Rooms 1, 11)</div></div>
+      <div class="numbered-item"><span class="num">3</span><div class="num-content"><strong>Emergency Readiness</strong>An emergency operations plan, tested periodically with drills. (Room 11)</div></div>
+      <div class="numbered-item"><span class="num">4</span><div class="num-content"><strong>High Quality, Safe Care for All</strong>A designated leader; screen for health-related social needs; connect to community resources; equal care across populations.</div></div>
+      <div class="numbered-item"><span class="num">5</span><div class="num-content"><strong>Preventing & Controlling Infection</strong>An infection prevention and control program that complies with CDC and WHO guidance. (Room 10)</div></div>
+      <div class="numbered-item"><span class="num">6</span><div class="num-content"><strong>Pain Management</strong>Safe prescribing; nonpharmacologic treatments; identify high-risk patients; report data.</div></div>
+      <div class="numbered-item"><span class="num">7</span><div class="num-content"><strong>Safe Informed Care</strong>Patient understands the information; can give or withhold consent; staff recognize abuse.</div></div>
+      <div class="numbered-item"><span class="num">8</span><div class="num-content"><strong>Reducing the Risk for Suicide</strong>Screen for suicidal ideation; plan follow-up care; assess the physical environment, especially psychiatric units (remove ligature points and sharp objects).</div></div>
+      <div class="numbered-item"><span class="num">9</span><div class="num-content"><strong>Tissue Transplant Safety</strong>Track and manage tissues; monitor adverse events.</div></div>
+      <div class="numbered-item"><span class="num">10</span><div class="num-content"><strong>Waived Testing</strong>Simple bedside tests such as fingerstick glucose and urine dipstick. Policies and procedures; staff competency; training at hire and every year.</div></div>
+      <div class="numbered-item"><span class="num">11</span><div class="num-content"><strong>Secure & Safe Physical Environment</strong>Security risks; emergency back-up power during outages; incarcerated patients; <strong>fall prevention</strong>. (Rooms 7, 8)</div></div>
+      <div class="numbered-item"><span class="num">12</span><div class="num-content"><strong>Health Professional Resource Management</strong>Staffing; education and training; evaluating care delivery models.</div></div>
+      <div class="numbered-item"><span class="num">13</span><div class="num-content"><strong>Protecting Patients & Providers in Imaging</strong>Qualified staff; <strong>ALARA</strong> (radiation "as low as reasonably achievable"); limit site access and screen people entering (for example, metal before MRI).</div></div>
+      <div class="numbered-item"><span class="num">14</span><div class="num-content"><strong>Effectively Managing Medications</strong>Automatic dispensing cabinets; standardized drug supply; labeling; anticoagulation therapy; antibiotic stewardship. (Room 9)</div></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 7. FALLS                                    -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-falls" id="falls" data-key="falls">
+    <div class="concept-header">
+      <span class="section-label">Room 7 · The Biggest Hazard</span>
+      <h2>Falls: Risk, Assessment & Prevention</h2>
+      <p class="slides">Gathered from slides 7, 10, 14, 16, 25, 31, 36, 42, 44, 45 (side rails are in Room 12)</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="principles">
+      <p><strong>About 11,000 fatal falls happen in health care facilities each year</strong>, plus many more injuries. Hospitals get <strong>no reimbursement</strong> from CMS for care caused by an in-hospital fall. Fall prevention is NPG #11.</p>
+    </div>
+
+    <p class="sub-label">Who falls</p>
+    <ul>
+      <li><strong>Older adults</strong> most of all (Room 3)</li>
+      <li>Infants and toddlers (falls from beds, changing tables, stairs)</li>
+      <li>Anyone with impaired mobility or a sensory or cognitive impairment (Room 4)</li>
+    </ul>
+
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Intrinsic factors (the patient)</h4>
+        <ul>
+          <li>History of falls</li>
+          <li>Weakness, impaired gait or balance</li>
+          <li>Confusion, dementia</li>
+          <li>Medications; orthostatic hypotension</li>
+          <li>Urgency or incontinence</li>
+          <li>Poor vision</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Extrinsic factors (the environment)</h4>
+        <ul>
+          <li>Wet or slippery floors</li>
+          <li>Clutter, cords, throw rugs</li>
+          <li>Poor lighting</li>
+          <li>Bed too high or unlocked</li>
+          <li>Poor footwear</li>
+          <li>Call light out of reach</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="sub-label">When to do a fall risk assessment</p>
+    <div class="numbered-list">
+      <div class="numbered-item"><span class="num">1</span><div class="num-content"><strong>On admission</strong></div></div>
+      <div class="numbered-item"><span class="num">2</span><div class="num-content"><strong>With any change in condition</strong></div></div>
+      <div class="numbered-item"><span class="num">3</span><div class="num-content"><strong>After a fall</strong></div></div>
+      <div class="numbered-item"><span class="num">4</span><div class="num-content"><strong>On transfer</strong> to another unit or facility</div></div>
+    </div>
+    <p>Use a <strong>standardized assessment model</strong>, such as the Morse Fall Scale or Hendrich II.</p>
+
+    <hr class="section-divider">
+
+    <h4>Prevention in the hospital</h4>
+    <div class="card-grid">
+      <div class="card">
+        <h4>Universal fall precautions (every patient)</h4>
+        <ul>
+          <li>Bed low and wheels locked</li>
+          <li>Call light and personal items within reach</li>
+          <li>Nonskid footwear</li>
+          <li>Room lit, clear, and uncluttered</li>
+          <li>Orient the patient to the room</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>For high-risk patients</h4>
+        <ul>
+          <li><strong>Yellow armband</strong> marks fall risk</li>
+          <li><strong>Hourly rounding:</strong> pain, position, potty, possessions</li>
+          <li>Toileting schedule</li>
+          <li>Bed or chair alarm; room near the nurses' station</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Transportation</h4>
+        <ul>
+          <li>Lock wheelchair and stretcher wheels before transfers</li>
+          <li>Stretcher rails up and safety belts on</li>
+          <li>Enough staff to move the patient</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Not a restraint replacement</h4>
+        <ul>
+          <li>Restraints and four side rails do not prevent falls and can make injuries worse (Room 12)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h4>Prevention at home</h4>
+    <ul>
+      <li>Remove throw rugs and clutter; good lighting, including night lights</li>
+      <li>Grab bars, shower chair, raised toilet seat, handrails on stairs</li>
+      <li>Exercise for strength and balance; vision and hearing exams</li>
+      <li>Medication organizers and review of drugs that cause dizziness</li>
+    </ul>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 8. FIRE, ELECTRICAL & CHEMICAL              -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-fire" id="fire" data-key="fire">
+    <div class="concept-header">
+      <span class="section-label">Room 8 · Things That Burn, Shock & Poison</span>
+      <h2>Fire, Electrical, Equipment & Chemical Hazards</h2>
+      <p class="slides">Gathered from slides 7, 10, 29–30, 39, 44–45</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <h4>Fire</h4>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>If there's a fire: RACE</h4>
+        <ul>
+          <li><strong>R</strong>escue patients in immediate danger</li>
+          <li><strong>A</strong>larm: activate it and call</li>
+          <li><strong>C</strong>ontain: close doors and windows</li>
+          <li><strong>E</strong>xtinguish or evacuate</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Using an extinguisher: PASS</h4>
+        <ul>
+          <li><strong>P</strong>ull the pin</li>
+          <li><strong>A</strong>im at the base of the fire</li>
+          <li><strong>S</strong>queeze the handle</li>
+          <li><strong>S</strong>weep side to side</li>
+        </ul>
+      </div>
+    </div>
+    <ul>
+      <li><strong>Oxygen feeds fire:</strong> no smoking, candles, or open flames near O2, at home or in the hospital</li>
+      <li><strong>Home:</strong> working smoke detectors, an escape plan, safe use of space heaters and stoves</li>
+      <li><strong>Hospital:</strong> know where the alarms, extinguishers, and exits are; evacuate horizontally first</li>
+    </ul>
+
+    <hr class="section-divider">
+
+    <h4>Electrical & equipment-related accidents</h4>
+    <p>Caused by electrical hazards or malfunction, disrepair, or misuse of equipment.</p>
+    <div class="numbered-list">
+      <div class="numbered-item"><span class="num">1</span><div class="num-content"><strong>Get adequate instruction</strong>Never use equipment you haven't been trained on.</div></div>
+      <div class="numbered-item"><span class="num">2</span><div class="num-content"><strong>Inspect before use</strong>Frayed cords, missing ground prongs, overdue inspection stickers. Use 3-prong grounded plugs.</div></div>
+      <div class="numbered-item"><span class="num">3</span><div class="num-content"><strong>Report and remove</strong>Tag faulty equipment and take it out of service.</div></div>
+      <div class="numbered-item"><span class="num">4</span><div class="num-content"><strong>Preventive maintenance (PM)</strong>Biomedical engineering inspects equipment on a schedule.</div></div>
+    </div>
+    <p class="note">For children (Room 3): teach safe use of electrical equipment and cover outlets.</p>
+
+    <hr class="section-divider">
+
+    <h4>Poison & chemical exposure</h4>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>At home (mostly children)</h4>
+        <ul>
+          <li>Lock up medicines, cleaners, and chemicals</li>
+          <li>Keep products in their original containers</li>
+          <li>Post Poison Control: <strong>1-800-222-1222</strong></li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>In health care (workers and patients)</h4>
+        <ul>
+          <li>Chemotherapy, cleaning agents, anesthetic gases</li>
+          <li><strong>Safety Data Sheets (SDS)</strong> list each chemical's hazards, safe handling, PPE, and first aid</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 9. MEDICATION & PROCEDURE SAFETY            -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-meds" id="meds" data-key="meds">
+    <div class="concept-header">
+      <span class="section-label">Room 9 · Errors Caused by Care</span>
+      <h2>Procedure-Related Accidents & Medication Safety</h2>
+      <p class="slides">Gathered from slides 15, 20 (NPG #1), 26 (NPG #14), 28, 34, 42, 44</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="principles">
+      <p><strong>Procedure-related accidents are caused by health care providers</strong>: medication errors, improper application of devices, and improper performance of procedures. Most are prevented by following policy and procedure every time.</p>
+    </div>
+
+    <p class="sub-label">Right patient, right care (NPG #1)</p>
+    <ul>
+      <li><strong>Two identifiers</strong> before any medication, treatment, or specimen (name and DOB; never room number)</li>
+      <li>Label specimens <strong>in front of the patient</strong></li>
+      <li><strong>Hand-off communication</strong> at shift change and transfer, using a structured format like SBAR</li>
+      <li><strong>Universal Protocol</strong> for surgery: pre-procedure verification, site marking, time-out</li>
+    </ul>
+
+    <p class="sub-label">Managing medications (NPG #14)</p>
+    <ul>
+      <li>Automatic dispensing cabinets</li>
+      <li>Standardized drug supply; clear labeling</li>
+      <li>Extra caution with <strong>anticoagulants</strong></li>
+      <li><strong>Antibiotic stewardship:</strong> use antibiotics only when needed, to prevent resistance</li>
+    </ul>
+
+    <p class="sub-label">Medications across settings</p>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Assessment</h4>
+        <ul>
+          <li>Medication review on every patient (Room 5)</li>
+          <li>Medications are an individual risk factor (drowsiness, dizziness)</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Home</h4>
+        <ul>
+          <li>Medication organizers, especially for older adults</li>
+          <li>Keep medicines in original, labeled bottles and locked away from children</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 10. INFECTION                               -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-infection" id="infection" data-key="infection">
+    <div class="concept-header">
+      <span class="section-label">Room 10 · The Invisible Hazard</span>
+      <h2>Transmission of Pathogens</h2>
+      <p class="slides">From slides 8, 22 (NPG #5), 44</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="card-grid">
+      <div class="card"><h4>Handwashing</h4><p>The single most effective way to prevent the spread of infection.</p></div>
+      <div class="card"><h4>Health care-acquired infection (HAI)</h4><p>An infection the patient did not have on admission and got during care.</p></div>
+      <div class="card"><h4>Immunizations</h4><p>Protect patients and staff; part of child safety (Room 3).</p></div>
+      <div class="card"><h4>Medical asepsis at home</h4><p>Clean technique: hand hygiene, clean surfaces, safe food handling.</p></div>
+    </div>
+    <p><strong>NPG #5:</strong> every facility runs an infection prevention and control program that complies with CDC and WHO guidance.</p>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 11. VIOLENCE, DISASTERS & SEIZURES          -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-violence" id="violence" data-key="violence">
+    <div class="concept-header">
+      <span class="section-label">Room 11 · Sudden Threats</span>
+      <h2>Workplace Violence, Disasters & Seizures</h2>
+      <p class="slides">Gathered from slides 7, 20–21 (NPG #2, #3), 32, 35, 45</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <h4>Workplace violence</h4>
+    <ul>
+      <li>Can come from <strong>patients, visitors, intruders, or co-workers</strong></li>
+      <li>Ranges from psychological harm (threats, bullying) all the way to death</li>
+      <li>NPG #2 requires a workplace violence program</li>
+      <li>Nurse's role: recognize escalation early, de-escalate, keep an exit, call security, report every incident</li>
+    </ul>
+
+    <hr class="section-divider">
+
+    <h4>Disasters & emergency readiness</h4>
+    <ul>
+      <li><strong>Natural</strong> (hurricane, flood, tornado) or <strong>man-made</strong> (mass shooting, bioterrorism, chemical spill)</li>
+      <li><strong>NPG #3:</strong> every facility has an emergency operations plan and tests it with periodic drills</li>
+      <li><strong>NPG #11:</strong> emergency back-up power during outages</li>
+      <li>Know your role in the plan before a disaster happens</li>
+    </ul>
+
+    <hr class="section-divider">
+
+    <h4>Seizures</h4>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Seizure precautions (before)</h4>
+        <ul>
+          <li>Bed low; padded side rails</li>
+          <li>Suction and oxygen ready at the bedside</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>During a seizure</h4>
+        <ul>
+          <li>Stay with the patient; call for help</li>
+          <li>Protect the head; turn on the side to keep the airway open</li>
+          <li><strong>Nothing in the mouth; do not restrain</strong></li>
+          <li>Time it, then document what you saw</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 12. RESTRAINTS                              -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-restraints" id="restraints" data-key="restraints">
+    <div class="concept-header">
+      <span class="section-label">Room 12 · The Last Resort</span>
+      <h2>Restraints & Side Rails</h2>
+      <p class="slides">From slides 45–55 · Box 27.12, p. 434</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="principles">
+      <p><strong>A restraint is any manual method, physical or mechanical device, material, or equipment that immobilizes or reduces a patient's ability to move arms, legs, body, or head freely.</strong></p>
+      <p><strong>The goal is a restraint-free environment.</strong></p>
+    </div>
+
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Is a restraint</h4>
+        <ul>
+          <li>Wrist, ankle, vest, or mitt restraints</li>
+          <li>All 4 side rails up on a patient who can't lower them</li>
+          <li><strong>Chemical restraint:</strong> a drug used to control behavior or movement that is <strong>not standard treatment</strong> for the patient's condition</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Is not a restraint</h4>
+        <ul>
+          <li>Orthopedically prescribed devices</li>
+          <li>Protective helmets</li>
+          <li>Physically holding a patient to do an exam</li>
+          <li>Protecting a patient from falling out of bed</li>
+          <li>Letting a patient join activities without risk of harm</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="sub-label">Rules for use</p>
+    <ul>
+      <li><strong>Temporary</strong></li>
+      <li><strong>Last resort</strong>, after alternatives have failed</li>
+      <li><strong>Least restrictive</strong> option that works</li>
+    </ul>
+
+    <p class="sub-label">Try these alternatives first (Box 27.12)</p>
+    <div class="card-grid">
+      <div class="card">
+        <h4>Reassure & watch</h4>
+        <ul>
+          <li>Orient and explain</li>
+          <li>Sitters</li>
+          <li>Room close to the nurses' station</li>
+          <li>De-escalation</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Meet needs</h4>
+        <ul>
+          <li>Pain control</li>
+          <li>Physiological needs (toileting, hunger, thirst)</li>
+          <li>Relaxation, rest; exercise</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Distract</h4>
+        <ul>
+          <li>Diversion activities</li>
+          <li>Visual and auditory stimuli (music, TV)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Remove the trigger</h4>
+        <ul>
+          <li>Camouflage IV lines; discontinue bothersome treatments</li>
+          <li>Remove cues (for example, a coat that prompts leaving)</li>
+          <li>Protective devices</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout alert">
+      <strong>Complications are serious, even death</strong>
+      Pneumonia, pressure injuries, strangulation, loss of strength and function, incontinence, increased agitation. <strong>Staff training on restraints is mandatory.</strong>
+    </div>
+
+    <hr class="section-divider">
+
+    <h4>Legal implications</h4>
+    <ul>
+      <li>Know your <strong>agency policy and procedures</strong></li>
+      <li>Must be <strong>clinically justified</strong> and part of the prescribed medical treatment</li>
+      <li>A provider evaluates the patient <strong>face-to-face</strong></li>
+      <li>The order must be <strong>current</strong> and state the <strong>type and location, duration, and circumstances</strong></li>
+      <li><strong>Never a PRN order</strong></li>
+    </ul>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>Non-violent (medical)</th><th>Violent or self-destructive</th></tr></thead>
+        <tbody>
+          <tr><th>Example</th><td>Pulling at a tube or IV</td><td>Hitting staff, self-harm</td></tr>
+          <tr><th>Order renewal</th><td>Per agency policy (often every calendar day)</td><td>Adults every 4 hr; ages 9–17 every 2 hr; under 9 every 1 hr</td></tr>
+          <tr><th>Face-to-face</th><td>Per policy</td><td>Within 1 hour of applying</td></tr>
+          <tr><th>Supervision</th><td>Regular checks per policy</td><td><strong>Continuous monitoring required</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Time frames are CMS rules as commonly taught. Confirm the exact numbers your instructor uses.</p>
+
+    <p class="sub-label">Required nursing assessment components (check often, per policy)</p>
+    <ul>
+      <li>Circulation below the restraint: pulse, color, temperature, sensation</li>
+      <li>Skin integrity under the restraint</li>
+      <li>Range of motion: release and move the limb</li>
+      <li>Toileting, food, and fluids</li>
+      <li>Behavior and whether the restraint is still needed</li>
+    </ul>
+    <ul>
+      <li>Two fingers fit under the restraint</li>
+      <li>Tie with a quick-release knot to the <strong>bed frame</strong>, never the side rail</li>
+    </ul>
+
+    <p class="sub-label">Removal</p>
+    <p>Remove as soon as the patient meets the criteria. Once removed, reapplying needs a <strong>new order</strong>.</p>
+
+    <hr class="section-divider">
+
+    <h4>Side rails</h4>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Benefits</h4>
+        <ul>
+          <li>Help the patient turn and reposition</li>
+          <li>Hold bed controls</li>
+          <li>Protect during transport or after sedation</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Risks</h4>
+        <ul>
+          <li><strong>All 4 up = a restraint</strong></li>
+          <li><strong>Entrapment</strong> between rail and mattress</li>
+          <li>Climbing over a rail makes a fall worse (Room 7)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- TAKEAWAYS                                   -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-review" id="review" data-key="review">
+    <div class="concept-header">
+      <span class="section-label">Walk-through · Review</span>
+      <h2>Ten Things to Carry Out of This Chapter</h2>
+    </div>
+    <ol style="line-height: 1.8;">
+      <li>Safety is a basic human need: freedom from psychological and physical injury.</li>
+      <li>A culture of safety is blame-free: report errors so the system gets fixed.</li>
+      <li>Injuries are the leading cause of death in children over 1; falls are the big risk for older adults.</li>
+      <li>Match every age's risks to its interventions: safe sleep for SIDS, driver education for MVAs, fall prevention for older adults.</li>
+      <li>Assess the patient (ask them first), the environment, and their caregiver and finances.</li>
+      <li>Know the 14 National Performance Goals. #1 is two identifiers, hand-off, and Universal Protocol.</li>
+      <li>Assess fall risk on admission, change in condition, after a fall, and on transfer. Yellow armband, hourly rounding, bed low and locked, call light in reach.</li>
+      <li>Fire: RACE, then PASS. Oxygen feeds fire.</li>
+      <li>Report and remove faulty equipment. Check the SDS for chemical hazards.</li>
+      <li>Restraints are the last resort: least restrictive, temporary, never PRN, ordered with type, location, duration, and circumstances.</li>
+    </ol>
+  </section>
+</div>
+
+<div class="save-status" id="saveStatus" role="status" aria-live="polite">Saved</div>
+
+<script>
+(async function() {
+  var db = null;
+  try { db = await (window.claude && claude.use ? claude.use("db") : Promise.resolve(null)); } catch (e) { db = null; }
+  var status = document.getElementById("saveStatus");
+  var sections = document.querySelectorAll("[data-key]");
+  var timers = {};
+
+  function showStatus(text, cls) {
+    status.textContent = text;
+    status.className = "save-status visible" + (cls ? " " + cls : "");
+    clearTimeout(status._hide);
+    if (text === "Saved") {
+      status._hide = setTimeout(function() { status.classList.remove("visible"); }, 1500);
+    }
+  }
+
+  if (db) {
+    try {
+      var snap = await db.collection("sections").get();
+      snap.docs.forEach(function(doc) {
+        if (!doc.exists) return;
+        var d = doc.data();
+        if (!d || !d.html) return;
+        var el = document.querySelector('[data-key="' + doc.id + '"]');
+        if (el) el.innerHTML = d.html;
+      });
+    } catch (e) {}
+  } else {
+    sections.forEach(function(sec) {
+      try {
+        var saved = localStorage.getItem("ps_" + sec.dataset.key);
+        if (saved) sec.innerHTML = saved;
+      } catch (e) {}
+    });
+  }
+
+  sections.forEach(function(sec) {
+    sec.contentEditable = "true";
+    sec.spellcheck = false;
+    sec.addEventListener("input", function() {
+      var key = sec.dataset.key;
+      showStatus("Editing...", "saving");
+      clearTimeout(timers[key]);
+      timers[key] = setTimeout(function() { save(key, sec); }, 1200);
+    });
+  });
+
+  async function save(key, sec) {
+    if (!db) {
+      try { localStorage.setItem("ps_" + key, sec.innerHTML); } catch (e) {}
+      showStatus("Saved");
+      return;
+    }
+    showStatus("Saving...", "saving");
+    try {
+      await db.doc("sections/" + key).set({ html: sec.innerHTML });
+      showStatus("Saved");
+    } catch (e) {
+      showStatus("Save failed", "saving");
+    }
+  }
+})();
+</script>
