@@ -1,0 +1,1040 @@
+<title>Sterile Procedures</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400;0,600;0,700;1,400&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one reading column; each concept is a "room" with its own color, visited in procedure order */
+:root {
+  --ground: #F2F1EC;
+  --surface: #E9E8E2;
+  --text: #2D2A25;
+  --text-muted: #6F6A63;
+  --border: #D6D4CE;
+
+  --asepsis: #4A6FA5;
+  --asepsis-bg: #EDF1F8;
+  --field: #3B7969;
+  --field-bg: #E8F2EF;
+  --gloves: #6B5B8A;
+  --gloves-bg: #F0ECF5;
+  --suction: #5E7A8C;
+  --suction-bg: #ECF0F3;
+  --assess: #9A4A4A;
+  --assess-bg: #F5ECEC;
+  --dressings: #8B6C4E;
+  --dressings-bg: #F3EEE8;
+  --drains: #A07F1E;
+  --drains-bg: #F6F2E5;
+  --support: #6B7A4A;
+  --support-bg: #F0F2E8;
+  --review: #4F4A44;
+  --review-bg: #E9E8E2;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground: #1C1F2A;
+    --surface: #262A38;
+    --text: #D3CFC6;
+    --text-muted: #908B84;
+    --border: #3A3E4E;
+
+    --asepsis: #7B9AD0;
+    --asepsis-bg: #232840;
+    --field: #64A894;
+    --field-bg: #1E2C28;
+    --gloves: #9A8ABF;
+    --gloves-bg: #28223A;
+    --suction: #8AAABF;
+    --suction-bg: #1E2830;
+    --assess: #C87070;
+    --assess-bg: #2E2224;
+    --dressings: #B99070;
+    --dressings-bg: #2A2520;
+    --drains: #D4B44A;
+    --drains-bg: #2A2718;
+    --support: #9AAA6A;
+    --support-bg: #242818;
+    --review: #B8B3AA;
+    --review-bg: #262A38;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #1C1F2A;
+  --surface: #262A38;
+  --text: #D3CFC6;
+  --text-muted: #908B84;
+  --border: #3A3E4E;
+
+  --asepsis: #7B9AD0;
+  --asepsis-bg: #232840;
+  --field: #64A894;
+  --field-bg: #1E2C28;
+  --gloves: #9A8ABF;
+  --gloves-bg: #28223A;
+  --suction: #8AAABF;
+  --suction-bg: #1E2830;
+  --assess: #C87070;
+  --assess-bg: #2E2224;
+  --dressings: #B99070;
+  --dressings-bg: #2A2520;
+  --drains: #D4B44A;
+  --drains-bg: #2A2718;
+  --support: #9AAA6A;
+  --support-bg: #242818;
+  --review: #B8B3AA;
+  --review-bg: #262A38;
+}
+
+body {
+  background: var(--ground);
+  color: var(--text);
+  font-family: 'Figtree', 'Segoe UI', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  padding-inline: 24px;
+  padding-block: 40px 80px;
+}
+@media (max-width: 500px) { body { padding-inline: 16px; } }
+.doc { max-width: 760px; margin: 0 auto; }
+
+h1 {
+  font-family: 'Vollkorn', 'Georgia', serif;
+  font-weight: 700;
+  font-size: 2rem;
+  line-height: 1.2;
+  text-wrap: balance;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+h2 {
+  font-family: 'Vollkorn', 'Georgia', serif;
+  font-weight: 600;
+  font-size: 1.35rem;
+  line-height: 1.3;
+  text-wrap: balance;
+  margin: 0 0 16px;
+}
+h4 {
+  font-family: 'Vollkorn', 'Georgia', serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin: 0 0 6px;
+}
+.subtitle {
+  color: var(--text-muted);
+  margin: 6px 0 0;
+  font-size: 0.95rem;
+}
+
+/* ── Map ── */
+.map {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 36px 0 48px;
+}
+.map-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: var(--surface);
+  white-space: nowrap;
+  text-decoration: none;
+}
+.map-item:hover, .map-item:focus-visible { color: var(--text); }
+.map-item:focus-visible { outline: 2px solid var(--text-muted); outline-offset: 2px; }
+.map-item .step {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.map-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Sections ── */
+.concept {
+  margin-bottom: 48px;
+  border-left: 4px solid var(--border);
+  padding-left: 24px;
+  scroll-margin-top: 16px;
+}
+@media (max-width: 500px) { .concept { padding-left: 14px; } }
+.concept-header {
+  padding: 14px 18px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  margin-left: -24px;
+  padding-left: 42px;
+}
+@media (max-width: 500px) { .concept-header { margin-left: -14px; padding-left: 28px; } }
+.concept-header h2 { margin-bottom: 0; }
+.concept-header .section-label {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+  display: block;
+}
+.concept-header .slides {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 4px 0 0;
+}
+
+.s-asepsis { border-left-color: var(--asepsis); --c: var(--asepsis); --c-bg: var(--asepsis-bg); }
+.s-field { border-left-color: var(--field); --c: var(--field); --c-bg: var(--field-bg); }
+.s-gloves { border-left-color: var(--gloves); --c: var(--gloves); --c-bg: var(--gloves-bg); }
+.s-suction { border-left-color: var(--suction); --c: var(--suction); --c-bg: var(--suction-bg); }
+.s-assess { border-left-color: var(--assess); --c: var(--assess); --c-bg: var(--assess-bg); }
+.s-dressings { border-left-color: var(--dressings); --c: var(--dressings); --c-bg: var(--dressings-bg); }
+.s-drains { border-left-color: var(--drains); --c: var(--drains); --c-bg: var(--drains-bg); }
+.s-support { border-left-color: var(--support); --c: var(--support); --c-bg: var(--support-bg); }
+.s-review { border-left-color: var(--review); --c: var(--review); --c-bg: var(--review-bg); }
+
+.concept .concept-header { background: var(--c-bg); }
+.concept .concept-header .section-label { color: var(--c); }
+
+/* ── Content ── */
+p { margin: 0 0 12px; }
+ul, ol { margin: 0 0 12px; padding-left: 20px; }
+li { margin-bottom: 4px; }
+li::marker { color: var(--text-muted); }
+strong { font-weight: 600; }
+
+.principles {
+  background: var(--surface);
+  border-radius: 6px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+.principles p { margin: 0; }
+.principles p + p { margin-top: 8px; }
+
+.sub-label {
+  font-family: 'Figtree', sans-serif;
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 18px 0 6px;
+}
+
+.callout {
+  background: var(--surface);
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin: 14px 0;
+  font-size: 0.93rem;
+}
+.callout strong:first-child { display: block; margin-bottom: 4px; }
+.callout.alert { background: var(--assess-bg); }
+.callout.alert strong:first-child { color: var(--assess); }
+
+.note {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+hr.section-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 24px 0;
+}
+
+/* ── Picture slot for the memory palace ── */
+.picture {
+  border: 1.5px dashed var(--c);
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin: 0 0 20px;
+  font-size: 0.9rem;
+}
+.picture .pic-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--c);
+  margin-bottom: 2px;
+}
+.picture .pic-text { min-height: 1.6em; }
+.picture .pic-text:empty::before {
+  content: "Click here to write the picture you'll place in this room.";
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ── Grids ── */
+.compare, .card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+  margin: 16px 0;
+}
+@media (max-width: 600px) {
+  .compare, .card-grid { grid-template-columns: 1fr; }
+}
+.compare > *, .card-grid > * { min-width: 0; }
+.compare-block {
+  border-top: 3px solid var(--c);
+  padding-top: 12px;
+}
+.compare-block ul { margin-bottom: 0; }
+
+.card {
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--c);
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+.card h4 {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--c);
+  margin-bottom: 6px;
+}
+.card ul { font-size: 0.92rem; margin: 0; }
+.card p { font-size: 0.92rem; margin: 0 0 6px; }
+.card .tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+/* ── Numbered sequences (real order only) ── */
+.numbered-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0;
+}
+.numbered-item {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 10px;
+  align-items: start;
+}
+.numbered-item .num {
+  font-family: 'Vollkorn', serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--c);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.numbered-item .num-content { font-size: 0.93rem; min-width: 0; }
+.numbered-item .num-content strong { display: block; margin-bottom: 2px; }
+
+/* ── Tables ── */
+.table-wrap { overflow-x: auto; margin: 16px 0; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+}
+thead th {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--c);
+  border-bottom: 2px solid var(--c);
+}
+tbody th {
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--text);
+}
+td ul { margin: 0; padding-left: 18px; }
+
+/* ── Editable ── */
+[contenteditable] { outline: none; }
+[contenteditable]:focus-within {
+  background: color-mix(in srgb, var(--text) 3%, transparent);
+  border-radius: 3px;
+}
+.save-status {
+  position: fixed;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  right: 16px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  z-index: 100;
+}
+.save-status.visible { opacity: 1; }
+.save-status.saving { color: var(--text); }
+@media (prefers-reduced-motion: reduce) { .save-status { transition: none; } }
+</style>
+
+<div class="doc">
+  <header>
+    <h1>Sterile Procedures</h1>
+    <p class="subtitle">NUR1119 Fundamentals: reorganized by concept, each topic in one place, in the order you would use it</p>
+  </header>
+
+  <nav class="map" aria-label="Rooms">
+    <a class="map-item" href="#asepsis"><span class="map-dot" style="background:var(--asepsis)"></span><span class="step">1</span> Sterile Technique</a>
+    <a class="map-item" href="#field"><span class="map-dot" style="background:var(--field)"></span><span class="step">2</span> The Sterile Field</a>
+    <a class="map-item" href="#gloves"><span class="map-dot" style="background:var(--gloves)"></span><span class="step">3</span> Sterile Gloves</a>
+    <a class="map-item" href="#suction"><span class="map-dot" style="background:var(--suction)"></span><span class="step">4</span> Suctioning</a>
+    <a class="map-item" href="#assess"><span class="map-dot" style="background:var(--assess)"></span><span class="step">5</span> Wound Assessment</a>
+    <a class="map-item" href="#dressings"><span class="map-dot" style="background:var(--dressings)"></span><span class="step">6</span> Wound Care & Dressings</a>
+    <a class="map-item" href="#drains"><span class="map-dot" style="background:var(--drains)"></span><span class="step">7</span> Drains</a>
+    <a class="map-item" href="#support"><span class="map-dot" style="background:var(--support)"></span><span class="step">8</span> Binders & Bandages</a>
+    <a class="map-item" href="#review"><span class="map-dot" style="background:var(--review)"></span>Review Chart</a>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 1. STERILE TECHNIQUE                        -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-asepsis" id="asepsis" data-key="asepsis">
+    <div class="concept-header">
+      <span class="section-label">Room 1 · Foundation</span>
+      <h2>Sterile Technique: What, Why, When</h2>
+      <p class="slides">From slides 3–5</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="principles">
+      <p><strong>Sterile technique eliminates all microorganisms from an object or area.</strong> It is a series of steps, done in the operating room or at the bedside.</p>
+    </div>
+
+    <p class="sub-label">Why we do it</p>
+    <ul>
+      <li>Prevents contamination of an open wound</li>
+      <li>Isolates the procedure area from the unsterile environment</li>
+      <li>Maintains a sterile field for the procedure</li>
+    </ul>
+
+    <p class="sub-label">When it is required</p>
+    <ul>
+      <li>Procedures that intentionally perforate the skin</li>
+      <li>Any time skin integrity is broken</li>
+      <li>During invasive procedures</li>
+    </ul>
+
+    <hr class="section-divider">
+
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Clean technique</h4>
+        <ul>
+          <li>Reduces the number of microorganisms</li>
+          <li>Clean gloves</li>
+          <li>Example: <strong>oropharyngeal</strong> suctioning (Yankauer)</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Sterile technique</h4>
+        <ul>
+          <li>Eliminates <strong>all</strong> microorganisms</li>
+          <li>Sterile field, sterile gloves</li>
+          <li>Examples: <strong>nasopharyngeal</strong> suctioning, wound care, wound irrigation</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note">Every procedure in the rooms that follow is either clean or sterile. Check which one before you start.</p>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 2. THE STERILE FIELD                        -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-field" id="field" data-key="field">
+    <div class="concept-header">
+      <span class="section-label">Room 2 · The Workspace</span>
+      <h2>The Sterile Field</h2>
+      <p class="slides">From slides 6–10</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="principles">
+      <p><strong>A sterile field is an area considered free of microorganisms</strong>, needed whenever the nurse performs a sterile procedure. Preparing one combines four skills: opening sterile packages, laying a sterile drape, adding sterile supplies, and pouring sterile solutions.</p>
+    </div>
+
+    <p class="sub-label">The 7 principles of sterile technique</p>
+    <div class="numbered-list">
+      <div class="numbered-item"><span class="num">1</span><div class="num-content"><strong>Sterile touching sterile stays sterile.</strong>A sterile object remains sterile when touched by another sterile object.</div></div>
+      <div class="numbered-item"><span class="num">2</span><div class="num-content"><strong>Only sterile goes on the field.</strong>Only sterile objects may be placed on a sterile field.</div></div>
+      <div class="numbered-item"><span class="num">3</span><div class="num-content"><strong>Below the waist or out of sight = contaminated.</strong>Keep the field above waist level and in your line of vision. Never turn your back on it.</div></div>
+      <div class="numbered-item"><span class="num">4</span><div class="num-content"><strong>Air exposure contaminates over time.</strong>Prolonged exposure to air contaminates a sterile object or field.</div></div>
+      <div class="numbered-item"><span class="num">5</span><div class="num-content"><strong>Wet wicks contamination.</strong>A sterile surface touching a wet, contaminated surface is contaminated by capillary action.</div></div>
+      <div class="numbered-item"><span class="num">6</span><div class="num-content"><strong>Fluid flows with gravity.</strong>Keep tips of wet items pointed down so fluid doesn't run from your contaminated hand back to the sterile tip.</div></div>
+      <div class="numbered-item"><span class="num">7</span><div class="num-content"><strong>The edges are contaminated.</strong>The outer 1-inch border of a sterile field is considered contaminated.</div></div>
+    </div>
+
+    <hr class="section-divider">
+
+    <p class="sub-label">Setting up, in order</p>
+    <div class="numbered-list">
+      <div class="numbered-item"><span class="num">1</span><div class="num-content"><strong>Gather all equipment first.</strong>Reaching away mid-procedure risks contamination.</div></div>
+      <div class="numbered-item"><span class="num">2</span><div class="num-content"><strong>Inspect every package.</strong>Check for tears, moisture, and expiration date.</div></div>
+      <div class="numbered-item"><span class="num">3</span><div class="num-content"><strong>Open on a clean, flat surface, as close as possible to the time of use.</strong>Less air exposure (principle 4).</div></div>
+      <div class="numbered-item"><span class="num">4</span><div class="num-content"><strong>Open the first flap AWAY from you.</strong>So you never reach across the sterile inside.</div></div>
+      <div class="numbered-item"><span class="num">5</span><div class="num-content"><strong>Add supplies and pour solutions</strong> without touching or splashing the field.</div></div>
+    </div>
+
+    <div class="callout alert">
+      <strong>When to stop and start over</strong>
+      Discard and restart if the field or an item touches anything non-sterile, liquid splatters onto it, or a <strong>strike-through</strong> happens (liquid soaks through the field, so it is contaminated).
+    </div>
+
+    <hr class="section-divider">
+
+    <p class="sub-label">Patient education: keep the patient from contaminating the field</p>
+    <ul>
+      <li>Avoid sudden movements of body parts covered by sterile drapes</li>
+      <li>Do not touch sterile supplies, drapes, or the nurse's gloves/gown</li>
+      <li>Avoid coughing, sneezing, or talking over the sterile area</li>
+    </ul>
+    <p class="note">Instructor note (slide 9): check allergies before you start. See Skills Book 10.2, p. 288.</p>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 3. STERILE GLOVES                           -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-gloves" id="gloves" data-key="gloves">
+    <div class="concept-header">
+      <span class="section-label">Room 3 · Your Hands</span>
+      <h2>Sterile Gloves: Open Gloving</h2>
+      <p class="slides">From slides 11–12</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="principles">
+      <p><strong>Remember "sterile to sterile."</strong> Your bare hand touches only the inside of the glove. A gloved hand touches only the outside of the other glove.</p>
+    </div>
+
+    <ul>
+      <li>An additional barrier to bacterial transfer; helps prevent transmission of pathogens</li>
+      <li>Always apply before performing a sterile procedure</li>
+      <li>Choose the right size and the right material (ask about latex allergy)</li>
+    </ul>
+
+    <p class="sub-label">Skill: open gloving, in order</p>
+    <div class="numbered-list">
+      <div class="numbered-item"><span class="num">1</span><div class="num-content"><strong>Hand hygiene</strong>At least 20 seconds.</div></div>
+      <div class="numbered-item"><span class="num">2</span><div class="num-content"><strong>Open the outer package</strong>On a clean, dry, flat surface at waist level or above.</div></div>
+      <div class="numbered-item"><span class="num">3</span><div class="num-content"><strong>Open the inner wrapper</strong>Touch only the outer edges; fold the flaps back so the gloves lie exposed.</div></div>
+      <div class="numbered-item"><span class="num">4</span><div class="num-content"><strong>Identify right and left</strong>Cuffs face you.</div></div>
+      <div class="numbered-item"><span class="num">5</span><div class="num-content"><strong>First glove (dominant hand)</strong>Nondominant thumb and fingers grasp the folded cuff (the inside surface). Pull the glove on without touching its outside.</div></div>
+      <div class="numbered-item"><span class="num">6</span><div class="num-content"><strong>Slide under the second cuff</strong>Gloved fingers go under the cuff of the second glove, touching only its outside.</div></div>
+      <div class="numbered-item"><span class="num">7</span><div class="num-content"><strong>Pull on the second glove</strong>Keep the gloved thumb pointed away so it doesn't touch bare skin.</div></div>
+      <div class="numbered-item"><span class="num">8</span><div class="num-content"><strong>Adjust and hold</strong>Interlock fingers to adjust. Keep hands above the waist and in sight (field principle 3).</div></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 4. SUCTIONING                               -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-suction" id="suction" data-key="suction">
+    <div class="concept-header">
+      <span class="section-label">Room 4 · The Airway</span>
+      <h2>Suctioning: Oropharyngeal & Nasopharyngeal</h2>
+      <p class="slides">From slides 13–23 (both documentation slides merged)</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <p class="sub-label">When to suction</p>
+    <ul>
+      <li>The client cannot clear their own airway</li>
+      <li>Decreased level of consciousness (LOC)</li>
+      <li>The client is weak or critically ill</li>
+    </ul>
+
+    <p class="sub-label">Equipment</p>
+    <div class="card-grid">
+      <div class="card">
+        <ul>
+          <li>PPE</li>
+          <li>Normal saline or water</li>
+          <li>Suction catheters</li>
+        </ul>
+      </div>
+      <div class="card">
+        <ul>
+          <li>Disposable cup or basin</li>
+          <li>Suction machine or wall suction</li>
+          <li>Connecting tubing</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="sub-label">Hazards of suctioning</p>
+    <div class="card-grid">
+      <div class="card"><h4>Hypoxia</h4><p>Suction removes oxygen along with secretions. Limit each pass and reoxygenate.</p></div>
+      <div class="card"><h4>Cardiac dysrhythmia</h4><p>Follows hypoxia or vagal stimulation. Watch heart rate and SpO2.</p></div>
+      <div class="card"><h4>Vagal stimulation</h4><p>The catheter in the throat can drop the heart rate (bradycardia).</p></div>
+      <div class="card"><h4>Cough reflex stimulation</h4><p>Coughing and gagging are expected, but they add stress for a weak client.</p></div>
+    </div>
+
+    <hr class="section-divider">
+
+    <h4>The two types, side by side</h4>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th></th><th>Oropharyngeal</th><th>Nasopharyngeal</th></tr>
+        </thead>
+        <tbody>
+          <tr><th>Route</th><td>Mouth</td><td>Nose</td></tr>
+          <tr><th>Device</th><td>Yankauer (rigid tip)</td><td>Flexible suction catheter</td></tr>
+          <tr><th>Technique</th><td><strong>Clean</strong></td><td><strong>Sterile</strong></td></tr>
+          <tr><th>When</th><td>Secretions in the mouth and throat</td><td>Yankauer is ineffective or inappropriate, or the lower airway needs secretions removed</td></tr>
+          <tr><th>Tips</th><td>
+            <ul>
+              <li>Coughing, gagging, sneezing are normal</li>
+              <li>Be ready to reapply supplemental O2</li>
+              <li>Store the Yankauer in a non-airtight container</li>
+            </ul>
+          </td><td>
+            <ul>
+              <li>Use water-soluble lubricant</li>
+              <li>No suction while inserting (thumb off the port)</li>
+              <li>Intermittent suction for up to <strong>10–15 seconds</strong></li>
+              <li>Rest at least <strong>1 minute</strong> between attempts</li>
+              <li><strong>2 passes max</strong> per catheter</li>
+            </ul>
+          </td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <strong>Instructor pearls</strong>
+      <strong>Nose → mouth is OK. Mouth → nose is never OK.</strong> The mouth is dirtier, so a catheter that has been in the mouth must not go into the nose.<br>
+      Insert about <strong>6.5 inches</strong> (not meters). The kit is marked in <strong>centimeters</strong>.
+    </div>
+
+    <hr class="section-divider">
+
+    <h4>Documentation</h4>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Both types</h4>
+        <ul>
+          <li>Amount, consistency, color, and odor of secretions</li>
+          <li>Client's response to the procedure</li>
+          <li>Pre- and post-suction cardiopulmonary assessment</li>
+          <li>Instructions given to caregivers and their ability to perform correctly</li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Oropharyngeal adds</h4>
+        <ul>
+          <li>Number of times suctioned</li>
+        </ul>
+        <h4 style="margin-top:14px">Nasopharyngeal adds</h4>
+        <ul>
+          <li>Size of catheter</li>
+          <li>Route of suctioning</li>
+          <li>Pre- and post-suction <strong>vital signs</strong></li>
+          <li>Breath sounds</li>
+          <li>SpO2 level</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 5. WOUND ASSESSMENT                         -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-assess" id="assess" data-key="assess">
+    <div class="concept-header">
+      <span class="section-label">Room 5 · Look Before You Touch</span>
+      <h2>Wound Assessment, Drainage & Complications</h2>
+      <p class="slides">From slides 24–28, plus the pressure dressing from slide 33</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <p class="sub-label">Wound bed assessment</p>
+    <ul>
+      <li>Location</li>
+      <li>Type of wound</li>
+      <li>Appearance before and after care</li>
+      <li>Size</li>
+      <li>Approximation (are the edges together?)</li>
+      <li>Periwound area (the skin around the wound)</li>
+      <li>Amount, color, and odor of drainage, using the four types below</li>
+    </ul>
+
+    <p class="sub-label">The four drainage types (slide 26 photos)</p>
+    <div class="card-grid">
+      <div class="card"><h4>Serous</h4><p>Clear to pale yellow, thin and watery. Plasma.</p></div>
+      <div class="card"><h4>Serosanguineous</h4><p>Pale pink to light red, watery. A mix of plasma and blood.</p></div>
+      <div class="card"><h4>Sanguineous</h4><p>Bright red. Fresh bleeding.</p></div>
+      <div class="card"><h4>Purulent</h4><p>Thick; yellow, green, tan, or brown; may smell. Pus, which signals infection.</p></div>
+    </div>
+
+    <hr class="section-divider">
+
+    <h4>Complications</h4>
+    <p>Listed in order of severity, from bleeding to organs outside the body.</p>
+    <div class="card-grid">
+      <div class="card">
+        <h4>Hemorrhage</h4>
+        <ul>
+          <li>Bleeding from the wound; dressing saturates quickly</li>
+          <li>Watch for signs of shock: rising HR, falling BP</li>
+          <li>Response: <strong>pressure dressing</strong> (below)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Infection</h4>
+        <ul>
+          <li>Redness, warmth, swelling, pain</li>
+          <li>Purulent drainage, odor, fever</li>
+          <li>Prevention is the reason for every rule in Rooms 1–3</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Dehiscence</h4>
+        <ul>
+          <li>Wound edges <strong>separate</strong> (partial or total)</li>
+          <li>Often after coughing or straining</li>
+          <li>Increase in serosanguineous drainage can be the warning</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Evisceration</h4>
+        <ul>
+          <li>Wound opens <strong>and organs protrude</strong></li>
+          <li><strong>Emergency:</strong> stay with the patient, call for help</li>
+          <li>Cover with sterile gauze moistened with sterile saline</li>
+          <li>Notify the surgeon; keep NPO</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="sub-label">Hemorrhage response: pressure dressing, in order</p>
+    <div class="numbered-list">
+      <div class="numbered-item"><span class="num">1</span><div class="num-content"><strong>Apply direct pressure</strong>Temporary control of excessive, sudden, unanticipated bleeding.</div></div>
+      <div class="numbered-item"><span class="num">2</span><div class="num-content"><strong>Cover with multiple thicknesses of gauze</strong></div></div>
+      <div class="numbered-item"><span class="num">3</span><div class="num-content"><strong>Tape over the gauze</strong></div></div>
+      <div class="numbered-item"><span class="num">4</span><div class="num-content"><strong>Wrap an elastic rolled bandage over the gauze</strong>Then check circulation below the wrap (see Room 8).</div></div>
+      <div class="numbered-item"><span class="num">5</span><div class="num-content"><strong>Report to the provider</strong></div></div>
+      <div class="numbered-item"><span class="num">6</span><div class="num-content"><strong>Document</strong></div></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 6. WOUND CARE & DRESSINGS                   -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-dressings" id="dressings" data-key="dressings">
+    <div class="concept-header">
+      <span class="section-label">Room 6 · Covering the Wound</span>
+      <h2>Wound Care, Dressings & Irrigation</h2>
+      <p class="slides">From slides 29–32, 34–36</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <p class="sub-label">Before you start</p>
+    <ul>
+      <li>Check for an <strong>order</strong> before removing a surgical dressing</li>
+      <li>Give <strong>pain medication</strong> at least <strong>30 minutes</strong> before (wound care and irrigation)</li>
+      <li>Use aseptic technique; keep a disposal bag and extra gloves within reach</li>
+      <li>Remove tape slowly, pulling toward the wound</li>
+    </ul>
+
+    <p class="sub-label">Cleaning direction: always clean to dirty</p>
+    <ul>
+      <li><strong>Incision:</strong> start on the incision line and work outward; wipe top to bottom, one stroke per gauze</li>
+      <li><strong>Drain site:</strong> start at the drain and clean in circles moving outward</li>
+    </ul>
+
+    <hr class="section-divider">
+
+    <h4>Dry vs. moist dressings: removal is the opposite</h4>
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Dry dressing</h4>
+        <ul>
+          <li>For abrasions and non-draining postoperative incisions</li>
+          <li><strong>Not</strong> used for debridement</li>
+          <li>If it sticks to the wound, <strong>moisten it before removing</strong></li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Moist dressing ("wet-to-dry" or "moist-to-dry")</h4>
+        <ul>
+          <li>Gauze moistened with the ordered solution as a moist contact layer</li>
+          <li><strong>Mechanically debrides</strong> the wound and promotes healing</li>
+          <li><strong>Do not moisten</strong> the inner layer to remove it. Pulling it off dry is what debrides.</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="sub-label">Skill: moist-to-dry dressing change, in order</p>
+    <div class="numbered-list">
+      <div class="numbered-item"><span class="num">1</span><div class="num-content"><strong>Prepare</strong>Check the order, premedicate for pain, perform hand hygiene, provide privacy, position the patient.</div></div>
+      <div class="numbered-item"><span class="num">2</span><div class="num-content"><strong>Remove the old dressing with clean gloves</strong>Note drainage on it, then discard dressing and gloves.</div></div>
+      <div class="numbered-item"><span class="num">3</span><div class="num-content"><strong>Set up the sterile field</strong>Pour the solution over the gauze in the sterile tray (Room 2).</div></div>
+      <div class="numbered-item"><span class="num">4</span><div class="num-content"><strong>Sterile gloves on</strong>See Room 3.</div></div>
+      <div class="numbered-item"><span class="num">5</span><div class="num-content"><strong>Assess and clean the wound</strong>See Room 5, then clean to dirty.</div></div>
+      <div class="numbered-item"><span class="num">6</span><div class="num-content"><strong>Pack moist gauze into the wound</strong>Wring it out until damp, not dripping. Fill the wound loosely without touching the surrounding skin.</div></div>
+      <div class="numbered-item"><span class="num">7</span><div class="num-content"><strong>Cover with dry gauze and secure</strong></div></div>
+      <div class="numbered-item"><span class="num">8</span><div class="num-content"><strong>Document</strong>Wound assessment, drainage, what was used, patient's tolerance.</div></div>
+    </div>
+
+    <hr class="section-divider">
+
+    <h4>Other dressings</h4>
+    <div class="card-grid">
+      <div class="card">
+        <h4>Transparent dressing</h4>
+        <ul>
+          <li>Thin polyurethane sheet with hypoallergenic acrylic adhesive on one side</li>
+          <li>Semi-occlusive: clear, adherent, non-absorptive</li>
+          <li>Conforms to body contours; you can see the wound through it</li>
+          <li>Moisture inactivates the adhesive</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Wound VAC</h4>
+        <ul>
+          <li>Foam or gauze plus <strong>negative (subatmospheric) pressure</strong> through suction</li>
+          <li>Pulls out wound fluid, reduces edema, stimulates repair</li>
+          <li>Runs intermittently or continuously</li>
+          <li><strong>Must stay sealed</strong> or the negative pressure is lost</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <h4>Wound irrigation (sterile)</h4>
+    <ul>
+      <li>Delivers cleaning solution directly into the wound with a syringe, syringe and catheter, pulsed lavage device, or handheld shower</li>
+      <li><strong>Position for gravity:</strong> solution flows over the wound into a collection basin (field principle 6)</li>
+      <li>Keep the syringe tip <strong>1 inch above</strong> the wound</li>
+      <li>Pain medication at least <strong>30 minutes</strong> before</li>
+    </ul>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 7. DRAINS                                   -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-drains" id="drains" data-key="drains">
+    <div class="concept-header">
+      <span class="section-label">Room 7 · Getting Fluid Out</span>
+      <h2>Drains: Open & Closed</h2>
+      <p class="slides">From slides 29, 37–38</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Open drain</h4>
+        <div class="card" style="margin-top:8px">
+          <h4>Penrose</h4>
+          <ul>
+            <li>Flat, soft tube; drains onto the dressing</li>
+            <li>A <strong>safety pin</strong> keeps it from slipping into the wound</li>
+            <li>Dressing gets wet, so change or reinforce it more often</li>
+          </ul>
+        </div>
+      </div>
+      <div class="compare-block">
+        <h4>Closed drains (suction)</h4>
+        <div class="card" style="margin-top:8px">
+          <h4>Jackson-Pratt (JP)</h4>
+          <ul>
+            <li>Tubing to a small <strong>bulb</strong></li>
+            <li>Squeeze the bulb and cap it to create suction</li>
+          </ul>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <h4>Hemovac</h4>
+          <ul>
+            <li>Larger, round <strong>spring-loaded canister</strong></li>
+            <li>Compress it and close the port to create suction</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <p class="sub-label">Drain care</p>
+    <ul>
+      <li>Clean the drain site from the drain outward in circles (Room 6)</li>
+      <li>Empty a closed drain when it is about half full; measure and record output and drainage type (Room 5)</li>
+      <li>Re-compress the bulb or canister after emptying so suction continues</li>
+    </ul>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- 8. BINDERS & BANDAGES                       -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-support" id="support" data-key="support">
+    <div class="concept-header">
+      <span class="section-label">Room 8 · The Outer Layer</span>
+      <h2>Binders & Elastic Bandages</h2>
+      <p class="slides">From slides 39–41</p>
+    </div>
+
+    <div class="picture"><span class="pic-label">Your picture</span><div class="pic-text"></div></div>
+
+    <div class="principles">
+      <p><strong>Shared rules.</strong> Binders and bandages hold dressings securely. Over a dressing they add protection and therapeutic benefit. They must not injure underlying or nearby parts, cause discomfort, or reduce breathing. <strong>If a physician applied it, get an order before loosening or removing it.</strong></p>
+    </div>
+
+    <div class="compare">
+      <div class="compare-block">
+        <h4>Binders</h4>
+        <ul>
+          <li>Support underlying muscles and large incisions</li>
+          <li>Most common: <strong>abdominal binder</strong></li>
+          <li>Wraps the trunk, so <strong>assess ventilation frequently</strong></li>
+        </ul>
+      </div>
+      <div class="compare-block">
+        <h4>Elastic bandages</h4>
+        <ul>
+          <li>Hold dressings, apply compression, or wrap hard-to-cover areas</li>
+          <li>Turns and width depend on the size and shape of the body part</li>
+          <li>Wrap <strong>distal to proximal</strong></li>
+          <li>Not too tight</li>
+          <li>Keep toes or fingertips <strong>uncovered and visible</strong> to check circulation</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>The check after any wrap</strong>
+      Binder: is breathing restricted? Bandage: are the exposed fingers or toes warm, pink, with good capillary refill and sensation?
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- REVIEW CHART (slides 42–44)                 -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section class="concept s-review" id="review" data-key="review">
+    <div class="concept-header">
+      <span class="section-label">Walk-through · Review</span>
+      <h2>Sterile Technique in Nursing: Summary Chart</h2>
+      <p class="slides">The chart activity from slides 42–44, filled in from the rooms above</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Section</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><th>Definition</th><td>A series of steps that eliminates all microorganisms from an object or area (Room 1).</td></tr>
+          <tr><th>Purpose</th><td>Prevent contamination of open wounds, isolate the procedure area from the unsterile environment, maintain a sterile field (Room 1).</td></tr>
+          <tr><th>Key principles</th><td>Sterile to sterile only; only sterile on the field; below waist or out of sight is contaminated; air exposure contaminates; wet wicks contamination; fluid follows gravity; edges are contaminated (Room 2).</td></tr>
+          <tr><th>Steps</th><td>Gather equipment → inspect packages → open on a flat surface, first flap away → add supplies and solutions → apply sterile gloves → perform procedure → restart if contaminated (Rooms 2–3).</td></tr>
+          <tr><th>Procedures</th><td>Nasopharyngeal suctioning, sterile dressing changes, moist-to-dry dressings, wound irrigation, drain site care (Rooms 4–7).</td></tr>
+          <tr><th>Patient education</th><td>No sudden movements under drapes; don't touch supplies, drapes, or the nurse; don't cough, sneeze, or talk over the field (Room 2).</td></tr>
+          <tr><th>Challenges</th><td>Strike-through, accidental contamination, long procedures (air exposure), patient movement or coughing, sterile items dropping below the waist.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<div class="save-status" id="saveStatus" role="status" aria-live="polite">Saved</div>
+
+<script>
+(async function() {
+  var db = null;
+  try { db = await (window.claude && claude.use ? claude.use("db") : Promise.resolve(null)); } catch (e) { db = null; }
+  var status = document.getElementById("saveStatus");
+  var sections = document.querySelectorAll("[data-key]");
+  var timers = {};
+
+  function showStatus(text, cls) {
+    status.textContent = text;
+    status.className = "save-status visible" + (cls ? " " + cls : "");
+    clearTimeout(status._hide);
+    if (text === "Saved") {
+      status._hide = setTimeout(function() { status.classList.remove("visible"); }, 1500);
+    }
+  }
+
+  if (db) {
+    try {
+      var snap = await db.collection("sections").get();
+      snap.docs.forEach(function(doc) {
+        if (!doc.exists) return;
+        var d = doc.data();
+        if (!d || !d.html) return;
+        var el = document.querySelector('[data-key="' + doc.id + '"]');
+        if (el) el.innerHTML = d.html;
+      });
+    } catch (e) {}
+  } else {
+    sections.forEach(function(sec) {
+      try {
+        var saved = localStorage.getItem("sp_" + sec.dataset.key);
+        if (saved) sec.innerHTML = saved;
+      } catch (e) {}
+    });
+  }
+
+  sections.forEach(function(sec) {
+    sec.contentEditable = "true";
+    sec.spellcheck = false;
+    sec.addEventListener("input", function() {
+      var key = sec.dataset.key;
+      showStatus("Editing...", "saving");
+      clearTimeout(timers[key]);
+      timers[key] = setTimeout(function() { save(key, sec); }, 1200);
+    });
+  });
+
+  async function save(key, sec) {
+    if (!db) {
+      try { localStorage.setItem("sp_" + key, sec.innerHTML); } catch (e) {}
+      showStatus("Saved");
+      return;
+    }
+    showStatus("Saving...", "saving");
+    try {
+      await db.doc("sections/" + key).set({ html: sec.innerHTML });
+      showStatus("Saved");
+    } catch (e) {
+      showStatus("Save failed", "saving");
+    }
+  }
+})();
+</script>
